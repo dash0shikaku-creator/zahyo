@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>座標計算トレーニング | Dash0</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#16181b">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="座標計算">
+<meta name="description" content="土地家屋調査士試験の記述式対策。複素数モードの関数電卓で、放射計算・交点計算・面積計算を練習できる無料のWeb電卓とドリル。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--paper:#f3f5f1;--grid:#dfe6dc;--sheet:#fff;--ink:#1d2a33;--soft:#5b6870;--line:#c9d2cc;--pencil:#c2412d;--calc:#16181b;
+  --f-disp:"Zen Kaku Gothic New","BIZ UDPGothic","Hiragino Sans",sans-serif;--f-body:"BIZ UDPGothic","Hiragino Sans","Yu Gothic",sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#161c20;--grid:#1f272c;--sheet:#1c2328;--ink:#e3e8e4;--soft:#9aa6a9;--line:#33403f;--pencil:#ef7a62;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#161c20;--grid:#1f272c;--sheet:#1c2328;--ink:#e3e8e4;--soft:#9aa6a9;--line:#33403f;--pencil:#ef7a62;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:880px;margin:0 auto;padding:36px max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left))}
+.brand{font-family:var(--f-mono);font-weight:600;font-size:14px;letter-spacing:.08em;color:var(--pencil)}
+h1{font-family:var(--f-disp);font-weight:900;font-size:clamp(28px,6vw,44px);line-height:1.2;margin:6px 0 12px;text-wrap:balance}
+.lead{font-size:17px;color:var(--soft);margin:0 0 28px;max-width:40em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{display:flex;flex-direction:column;gap:8px;background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:20px;text-decoration:none;color:inherit;transition:border-color .15s}
+.card:hover,.card:focus-visible{border-color:var(--pencil);outline:none}
+.card .tag{align-self:flex-start;font-size:12px;font-weight:700;color:#fff;background:var(--pencil);border-radius:999px;padding:1px 10px}
+.card .tag.gray{background:var(--soft)}
+.card h2{font-family:var(--f-disp);font-size:22px;margin:0}
+.card p{margin:0;color:var(--soft);font-size:15px}
+.card .go{margin-top:auto;font-weight:700;color:var(--pencil)}
+section{margin-top:36px}
+section h3{font-family:var(--f-disp);font-size:18px;margin:0 0 8px}
+ul{margin:0;padding-left:1.2em}
+li{margin:4px 0}
+.note{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:14px 18px;font-size:14px;color:var(--soft)}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--soft)}
+footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Dash0</div>
+  <h1>土地家屋調査士 記述式<br>座標計算トレーニング</h1>
+  <p class="lead">複素数モードの関数電卓で、放射計算・交点計算・面積計算を練習できる無料のWeb電卓です。インストールも登録もいりません。</p>
+
+  <div class="cards">
+    <a class="card" href="drill.html">
+      <span class="tag">おすすめ</span>
+      <h2>座標計算ドリル</h2>
+      <p>問題を見ながら電卓を打って、答え合わせとタイム計測。距離・方向角、座標、面積の3種類。解き方とキー操作の解説つき。</p>
+      <span class="go">ドリルを始める →</span>
+    </a>
+    <a class="card" href="calculator.html">
+      <span class="tag gray">電卓だけ</span>
+      <h2>関数電卓</h2>
+      <p>複素数モードの関数電卓だけを使いたいときに。メモリーは20個、度分秒の入力、Arg・Abs などに対応。</p>
+      <span class="go">電卓を開く →</span>
+    </a>
+  </div>
+
+  <section>
+    <h3>使い方のコツ</h3>
+    <ul>
+      <li>スマホは<b>横向き</b>にすると、問題と電卓が左右に並びます。</li>
+      <li>座標は <b>X + Y i</b> の形で入力します。i は Eng キー、∠ は Shift → Eng です。</li>
+      <li>点の座標は <b>STO → 数字キー</b> で記憶し、<b>Alpha → 数字キー</b> で呼び出します。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>ご注意</h3>
+    <div class="note">
+      キヤノンの関数電卓 F-570X をモデルに、個人が作成した練習用の電卓です。公式のソフトではないため、実物と異なる動作をする場合があります。学習目的であれば、どなたでも無料で自由にお使いください。内容を改変しての再配布はご遠慮ください。計算結果はご自身でも確かめてください。試験会場ではスマホは使えないため、本番は実機の電卓をご用意ください。
+    </div>
+  </section>
+
+  <footer>
+    <b>Dash0</b> ― ゼロから走りだすあなたを応援したい<br>
+    資格試験を独学で目指す人のための勉強方法を発信しています。
+  </footer>
+</div>
+<script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script>
+</body>
+</html>

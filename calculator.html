@@ -1,0 +1,713 @@
+<!doctype html><html lang="ja"><head><meta charset=utf8><link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#16181b">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="座標計算">
+<meta name="description" content="土地家屋調査士試験の記述式対策。複素数モードの関数電卓で座標計算を練習できる無料のWeb電卓です。"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+.toplink{display:inline-block;font-size:13px;color:var(--ink-soft);text-decoration:none;margin-bottom:4px}.toplink:hover{color:var(--pencil)}
+.note-free{font-size:12px;color:var(--ink-soft)}
+</style></head><body>
+<title>調査士 関数電卓</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Questrial&display=swap">
+<style>
+/* Layout: drafting-desk split — problem sheet on the left (graph paper), calculator on the right; stacks on phones */
+:root{
+  --paper:#f3f5f1; --grid:#dfe6dc; --sheet:#ffffff; --ink:#1d2a33; --ink-soft:#5b6870;
+  --line:#c9d2cc; --pencil:#c2412d; --ok:#2f7d4f; --ng:#b3361f;
+  --body-bg:#16181b; --body-edge:#000000; --body-ink:#c9ced4; --lcd:#c8cfbf; --lcd-ink:#1e261b; --bezel:#2a2e33;
+  --key-fn:#e6e8eb; --key-fn-ink:#1b1e22; --key-num:#3b4047; --key-num-ink:#ffffff; --key-gray:#8a6f4e; --key-round:#3b4047;
+  --lb-shift:#f2f2f2; --lb-alpha:#ff8f7a; --lb-green:#7ad39b;
+  --f-disp:"Zen Kaku Gothic New","BIZ UDPGothic","Hiragino Sans",sans-serif;
+  --f-body:"BIZ UDPGothic","Hiragino Sans","Yu Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --f-key:"Questrial","Century Gothic","Avenir Next","Avenir",sans-serif; --key-fn-txt:#5f676d; --key-ic:#7c8489;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#161c20; --grid:#1f272c; --sheet:#1c2328; --ink:#e3e8e4; --ink-soft:#9aa6a9;
+  --line:#33403f; --pencil:#ef7a62; --ok:#6fcf97; --ng:#ff8a73; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#161c20; --grid:#1f272c; --sheet:#1c2328; --ink:#e3e8e4; --ink-soft:#9aa6a9;
+  --line:#33403f; --pencil:#ef7a62; --ok:#6fcf97; --ng:#ff8a73; color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px}
+
+.page{min-height:100%;display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:14px 28px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.page h1{font-family:var(--f-disp);font-weight:900;font-size:20px;margin:0;letter-spacing:.04em}
+.page h1 span{color:var(--pencil);font-size:12px;letter-spacing:.12em;display:block;font-weight:700}
+.help{max-width:360px;width:100%;font-size:13px;line-height:1.7;color:var(--ink-soft)}
+.help h2{font-size:14px;color:var(--ink);margin:0 0 4px;font-family:var(--f-disp)}
+.help ul{margin:0;padding-left:1.2em}
+.help code{font-family:var(--f-mono);font-size:12px;background:var(--sheet);border:1px solid var(--line);padding:0 4px;border-radius:3px;white-space:nowrap;color:var(--ink)}
+.calc{position:static}
+/* ===== calculator: compact black body, sized so the whole calculator fits on a phone screen ===== */
+.calc{background:var(--body-bg);border:1px solid var(--body-edge);border-radius:22px 22px 28px 28px;padding:10px 10px 12px;
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 10px 24px rgba(0,0,0,.25);position:sticky;top:calc(12px + env(safe-area-inset-top,0px));
+  display:flex;flex-direction:column;gap:6px;color:var(--body-ink);user-select:none;-webkit-user-select:none;width:100%;max-width:360px;margin:0 auto}
+@media (max-width:880px){.calc{position:static}}
+/* PC: calculator on the left, notes on the right, so the sticky calculator never covers the notes */
+@media (min-width:881px){
+  .page{display:grid;grid-template-columns:360px minmax(0,440px);justify-content:center;column-gap:36px;row-gap:14px;align-items:start}
+  .page>h1,.page>.toplink{grid-column:1/-1;justify-self:center}
+  .page>.calc{grid-column:1}
+  .page>.help{grid-column:2;max-width:none;padding-top:6px}
+}
+.lcdwrap{background:var(--bezel);border-radius:7px;padding:5px}
+.lcd{container-type:inline-size;background:var(--lcd);color:var(--lcd-ink);border-radius:3px;padding:4px 7px;height:96px;display:flex;flex-direction:column;gap:1px;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.25);font-family:var(--f-mono);overflow:hidden;height:136px}
+.ind{display:flex;justify-content:space-between;align-items:center;white-space:nowrap;font-size:calc(100cqw / 30);font-weight:600;line-height:1.15;min-height:12px;letter-spacing:-.02em}
+.ind .bx{border:1px solid currentColor;border-radius:1.5px;padding:0 .12em;line-height:1.05}
+.ind .bx{background:var(--lcd-ink);color:var(--lcd);border-color:var(--lcd-ink)}
+.ind .pz{background:var(--lcd-ink);color:var(--lcd);border-color:var(--lcd-ink)!important;display:inline-flex;gap:.14em;border:1px solid currentColor;border-radius:1.5px;padding:.12em .16em;height:1.05em;box-sizing:border-box}
+.ind .pz b{display:block;width:.16em;background:currentColor}
+.ind .bat{position:relative;width:1.9em;height:.95em;border:1px solid currentColor;border-radius:1.5px;box-sizing:border-box;margin-right:.18em;background:currentColor;background-clip:content-box;padding:1px}
+.ind .bat::after{content:"";position:absolute;right:-.24em;top:.2em;width:.16em;height:.4em;background:currentColor;border-radius:0 1px 1px 0}
+.ind span{opacity:.12}.ind span.on{opacity:1}
+.expr{font-size:21px;font-size:calc(100cqw / 16.6 / .76);min-height:1.2em;white-space:nowrap;line-height:1.2}
+.expr .c{display:inline-block;width:calc(100% / 16.6);text-align:center;vertical-align:bottom}
+.expr .c.ar{font-size:.62em}
+.expr .ra{display:inline-block;font-size:.62em;vertical-align:bottom;padding-bottom:.25em}
+.expr .menu,.expr .apps,.expr .appname{white-space:pre}
+.expr .cur{display:inline-block;width:2px;margin-right:-2px;height:1.05em;background:var(--lcd-ink);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.expr .cur{animation:none}}
+.res{font-size:32px;font-size:calc(100cqw / 16.6 / .55);font-weight:700;text-align:right;font-variant-numeric:tabular-nums;margin-top:auto;word-break:break-all;line-height:1.1;white-space:nowrap}
+.res.small{font-size:14px}
+.res.two{line-height:1.02;font-size:calc(100cqw / 16.6 / .6)}
+.res .x10{font-size:.5em;font-weight:600;margin-left:.15em}
+.res sup{font-size:.55em;line-height:0;vertical-align:.75em}
+.res.small{white-space:normal}
+.mu{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+.res i,.expr i{font-family:Georgia,'Times New Roman',serif}
+.menu{font-size:13px;line-height:1.5;white-space:pre}
+.rcl{display:grid;grid-template-columns:1fr 1fr;font-size:calc(100cqw / 33 / .6);line-height:1.28;white-space:nowrap;margin-top:1px}
+.rcl span{overflow:hidden} .rcl .x10{font-size:.62em} .rcl sup{font-size:.62em;vertical-align:.55em;line-height:0} .rcl i{font-style:italic}
+.ind.only-arrow>span:not(#iUp):not(#iDn){opacity:.12!important}
+.ind.only-arrow .bx,.ind.only-arrow .pz{background:var(--lcd-ink)}
+.cmenu{position:relative;font-size:calc(100cqw / 16.6 / .82);line-height:1.13;font-weight:700;white-space:nowrap;letter-spacing:calc(100cqw / 16.6 - .6em);padding-right:calc(100cqw / 16.6);margin-top:1px}
+.cmenu>div{overflow:hidden}
+.cmenu.clr>div{white-space:pre}
+.cmenu .sb{position:absolute;right:2px;width:.22em;background:var(--lcd-ink);border-radius:1px}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 2px;margin-top:2px}
+.app{display:flex;align-items:flex-end;gap:2px}
+.app .no{font-size:calc(100cqw / 26);font-weight:700;background:var(--lcd-ink);color:var(--lcd);padding:0 .18em;line-height:1.15}
+.app .ic{flex:1;display:flex;justify-content:center;padding:1px 0}
+.app svg{width:100%;max-width:calc(100cqw / 5.6);height:auto;display:block}
+.app svg .bgfill{fill:var(--lcd)}
+.app.sel .ic{background:var(--lcd-ink);color:var(--lcd)}
+.app.sel svg .bgfill{fill:var(--lcd-ink)}
+.app.sel .no{background:none;color:var(--lcd-ink)}
+.appname{font-size:calc(100cqw / 16.6 / .82);font-weight:700;letter-spacing:calc(100cqw / 16.6 - .6em);line-height:1.15;margin-top:2px}
+.top{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:auto auto auto;gap:2px 5px;align-items:end}
+.dpad{grid-column:3/5;grid-row:1/4;position:relative;width:96px;height:96px;justify-self:center;align-self:center}
+.dpad .k{position:absolute;width:32px;height:32px;border-radius:50%;background:var(--key-round);color:#fff;font-size:10px;padding:0}
+.dpad .u{left:32px;top:0}.dpad .d{left:32px;bottom:0}.dpad .l{left:0;top:32px}.dpad .r{right:0;top:32px}
+.rowf{display:grid;grid-template-columns:repeat(6,1fr);gap:2px 5px}
+.rown{display:grid;grid-template-columns:repeat(5,1fr);gap:4px 7px}
+.kw{display:flex;flex-direction:column;align-items:stretch;gap:1px;min-width:0}
+.lbl{display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--f-key);font-size:9px;font-weight:400;line-height:1.05;min-height:10px;padding:0 1px;white-space:nowrap;overflow:hidden;gap:2px}
+.dpad .k{font-family:var(--f-mono)} /* keep ◀▶ as plain text (iOS would draw emoji) */
+.lbl .sh{color:var(--lb-shift)} .lbl .al{color:var(--lb-alpha)}
+.lbl .it{font-family:'Times New Roman',Georgia,serif;font-style:italic;font-weight:700;font-size:1.12em}
+.lbl .gb,.lbl .g0{color:var(--lb-green)} .lbl .k0{color:var(--lb-shift)}
+/* key-face icons drawn as on the real keys */
+.k .bf,.k .bo,.lbl .bf,.lbl .bo{display:inline-block;width:.5em;height:.5em;vertical-align:middle;box-sizing:border-box}
+.k .bf{background:var(--key-ic)} .k .bo{border:1.5px solid var(--key-ic)}
+.lbl .bf{background:currentColor;width:.6em;height:.6em} .lbl .bo{border:1px solid currentColor;width:.5em;height:.5em}
+.k .xi{font-family:'Times New Roman',Georgia,serif;font-style:italic;font-weight:700;font-size:1.25em;line-height:1}
+.k sup{font-size:.62em;vertical-align:.7em;line-height:0;margin-left:.04em}
+.k .fr,.lbl .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;gap:1px}
+.k .fr i{display:block;width:.95em;height:1.5px;background:var(--key-ic)} .lbl .fr i{display:block;width:.7em;height:1px;background:currentColor}
+.k .fr .bf,.k .fr .bo{width:.42em;height:.42em} .lbl .fr .bf,.lbl .fr .bo{width:.32em;height:.32em}
+.k .sm{width:.36em!important;height:.36em!important;vertical-align:.45em!important}
+.k .tall{width:.42em!important;height:.72em!important;margin-left:.06em}
+.k .big{width:.62em!important;height:.62em!important;margin-left:.12em}
+.k .int{display:inline-flex;align-items:center;font-size:1.15em;line-height:1}
+.k .int .lim{display:inline-flex;flex-direction:column;justify-content:space-between;height:1.05em;margin-left:-.05em}
+.k .int .lim .bo{width:.3em;height:.3em;border-width:1px}
+.k .dms{letter-spacing:.28em;font-weight:700} .k .dms i{font-style:italic}
+.lbl .sfr{display:inline-flex;flex-direction:column;align-items:center;font-family:'Times New Roman',Georgia,serif;font-style:italic;font-weight:700;font-size:.85em;line-height:.85;vertical-align:-.2em}
+.lbl .sfr span:first-child{border-bottom:1px solid currentColor;padding:0 .1em}
+.lbl .sup{font-size:.7em;vertical-align:.5em;line-height:0}
+.k{font-family:var(--f-key);font-size:15px;font-weight:400;border:0;border-radius:7px;padding:0;height:26px;cursor:pointer;
+  background:var(--key-fn);color:var(--key-fn-txt);box-shadow:0 2px 0 rgba(0,0,0,.6);touch-action:manipulation;min-width:0;white-space:nowrap;overflow:hidden}
+.k:active{transform:translateY(2px);box-shadow:none}
+.k.round{border-radius:50%;width:34px;height:34px;justify-self:center;background:var(--key-round);color:#fff;font-size:10.5px;letter-spacing:-.03em}
+.k.apps{background:#9aa1a9;color:#111;width:44px;height:24px;font-size:12px;justify-self:center;text-align:center;display:flex;justify-content:center;align-items:center;line-height:1}
+.rown .k{height:33px;font-size:20px;background:var(--key-num);color:var(--key-num-ink)}
+.rown .k.gray{background:var(--key-gray);color:#fff;font-size:17px}
+.k.on{outline:2px solid #ffbf3c;outline-offset:1px}
+.vars{font-family:var(--f-mono);font-size:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:0 6px;padding:0 4px;color:var(--body-ink)}
+.vars span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vars{display:none!important}
+</style>
+<div class="page">
+  <a class="toplink" href="./">← トップへ</a>
+  <h1><span>土地家屋調査士 記述式</span>関数電卓</h1>
+  <aside class="calc" aria-label="関数電卓">
+    <div class="lcdwrap"><div class="lcd" aria-live="polite">
+      <div class="ind" aria-hidden="true"><span id="iS" class="bx">S</span><span id="iA" class="bx">A</span><span id="iM">M</span><span id="iSto">STO</span><span id="iMath" class="on">Math</span><span id="iD" class="bx inv on">D</span><span id="iR" class="bx inv">R</span><span id="iG" class="bx inv">G</span><span id="iFix">FIX</span><span id="iSci">SCI</span><span id="iE">E</span><span id="iC"><i>i</i></span><span id="iPol">∠</span><span id="iUp">▲</span><span id="iDn">▼</span><span id="iLt">◀</span><span id="iRt">▶</span><span id="iPz" class="pz"><b></b><b></b></span><span id="iBat" class="bat on"></span></div>
+      <div class="expr" id="expr"></div>
+      <div class="res" id="res">0</div>
+    </div></div>
+    <div class="top" id="top"></div>
+    <div id="rowsF" style="display:grid;gap:2px"></div>
+    <div id="rowsN" style="display:grid;gap:4px;margin-top:3px"></div>
+    <div class="vars" id="vars"></div>
+  </aside>
+  <section class="help">
+    <h2>使い方</h2>
+    <ul>
+      <li>最初から複素数モード(2:Complex)です。<code>Eng</code> で i を入力します。</li>
+      <li><code>Shift</code><code>Eng</code> で ∠。</li>
+      <li><code>Apps</code> で複素数の関数一覧(1:Argument 2:Conjugate 3:Real Part 4:Imaginary Part)。<code>▼</code> で2ページ目(1:▶r∠θ 2:▶a+bi)。数字キーで選びます。</li>
+      <li>方向角は <code>Apps</code><code>1</code>(Argument)で <code>Arg((B点)−(A点))</code>。マイナスなら 360 を足し、<code>°′″</code> で度分秒に。</li>
+      <li>メモリーは20個。<code>STO</code> のあとキーを押して記憶(A〜F・y・z・M は上の文字のキー、x は <code>x</code> キー、数字キー <code>0</code>〜<code>9</code>)。呼び出しは <code>Alpha</code> のあと同じキー。x は <code>x</code> キーだけで呼び出せます。<code>Shift</code><code>STO</code>(Recall)でメモリーの一覧、<code>▼</code> で数字キーのメモリー。一覧でキーを押すと、その名前が式に入ります。数字キーのメモリーは式の中で下線つきの数字(例:<u>3</u>)で表示されます。</li>
+      <li><code>Shift</code><code>9</code>(Clear)→ <code>2</code> → <code>=</code> でメモリーを全部消去。</li>
+      <li><code>Abs</code> で <code>|□|</code> が出ます。枠の中に入力し、<code>▶</code> か <code>)</code> で枠の外へ出ます。</li>
+      <li>1行に表示できるのは16文字。はみ出すと左端に ◀ が出ます。</li>
+      <li><code>Shift</code><code>+</code> で Pol(、<code>Shift</code><code>−</code> で Rec(。結果は x と y に入ります。</li>
+      <li>角度は <code>35</code><code>°′″</code><code>20</code><code>°′″</code><code>15</code><code>°′″</code> のように入力。計算後の <code>°′″</code> で度分秒表示。</li>
+      <li><code>Mode</code> か <code>Apps</code> でモード切替、<code>Shift</code><code>Mode</code> で角度(Deg/Rad)と複素数の表示形式を設定。</li>
+    </ul>
+    <p class="note-free">キヤノンの関数電卓 F-570X をモデルに、個人が作成した練習用の電卓です。公式のソフトではないため、実物と異なる動作をする場合があります。学習目的であれば、どなたでも無料で自由にお使いください。内容を改変しての再配布はご遠慮ください。計算結果はご自身でも確かめてください。</p>
+  </section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+
+/* ======================= complex arithmetic ======================= */
+const Cx=(re,im=0)=>({re,im});
+const EPS=1e-12;
+const isReal=z=>Math.abs(z.im)<=EPS*Math.max(1,Math.abs(z.re));
+const add=(a,b)=>Cx(a.re+b.re,a.im+b.im), sub=(a,b)=>Cx(a.re-b.re,a.im-b.im);
+const mul=(a,b)=>Cx(a.re*b.re-a.im*b.im,a.re*b.im+a.im*b.re);
+const div=(a,b)=>{const d=b.re*b.re+b.im*b.im;if(d===0)throw E('Math ERROR');return Cx((a.re*b.re+a.im*b.im)/d,(a.im*b.re-a.re*b.im)/d)};
+const neg=a=>Cx(0-a.re,0-a.im), cabs=a=>Math.hypot(a.re,a.im), carg=a=>Math.atan2(a.im,a.re);
+const cexp=a=>Cx(Math.exp(a.re)*Math.cos(a.im),Math.exp(a.re)*Math.sin(a.im));
+const clog=a=>{if(a.re===0&&a.im===0)throw E('Math ERROR');return Cx(Math.log(cabs(a)),carg(a))};
+function cpow(a,b){
+  if(isReal(b)&&Number.isInteger(b.re)&&Math.abs(b.re)<=1024){
+    let n=Math.abs(b.re),r=Cx(1),x=a;while(n){if(n&1)r=mul(r,x);x=mul(x,x);n>>=1}
+    return b.re<0?div(Cx(1),r):r;
+  }
+  if(isReal(a)&&isReal(b)&&a.re>=0)return Cx(Math.pow(a.re,b.re));
+  if(isReal(a)&&isReal(b)&&!st.cmplx){ // real mode: odd roots of negatives
+    const inv=1/b.re;if(Number.isInteger(Math.round(inv))&&Math.abs(inv-Math.round(inv))<1e-9&&Math.round(inv)%2)return Cx(-Math.pow(-a.re,b.re));
+    throw E('Math ERROR');
+  }
+  if(a.re===0&&a.im===0)return Cx(0);
+  return cexp(mul(b,clog(a)));
+}
+function E(m){return new Error(m)}
+const realOf=z=>{if(!isReal(z))throw E('Math ERROR');return z.re};
+
+/* ======================= state ======================= */
+const st={tok:[],cur:0,shift:false,alpha:false,sto:false,rcl:false,menu:null,msel:2,cmplx:true,rad:false,polar:false,
+  vars:{A:Cx(0),B:Cx(0),C:Cx(0),D:Cx(0),E:Cx(0),F:Cx(0),x:Cx(0),y:Cx(0),z:Cx(0),M:Cx(0),'0':Cx(0),'1':Cx(0),'2':Cx(0),'3':Cx(0),'4':Cx(0),'5':Cx(0),'6':Cx(0),'7':Cx(0),'8':Cx(0),'9':Cx(0)},
+  ans:Cx(0),preAns:Cx(0),last:null,justEval:false,view:'dec',hist:[],hi:-1,msg:null};
+const AU=()=>st.rad?1:Math.PI/180; // angle unit → radians factor
+
+/* ======================= keys ======================= */
+const T=(s,t,v)=>({s,t,v});
+const ins=(...toks)=>()=>insertTok(toks);
+const fn=(name,s)=>ins(T(s,'fn',name));
+const vn=n=>n; // token text
+const vH=n=>/^[0-9]$/.test(n)?`<span class="mu">${n}</span>`:n; // number-key memories show as an underlined digit
+const V=n=>ins(T(vn(n),'var',n));
+const na=name=>()=>setMsg(`${name}:この練習用電卓では未対応`);
+const K=(l,a,cls='',h='')=>({l,a,cls,h}); // h: label as printed above the key (display only)
+const IT=t=>`<span class="it">${t}</span>`, GB=t=>`<span class="gb">⌈</span>${t}<span class="gb">⌉</span>`;
+const XI='<span class="xi">x</span>';
+// each key: {m: main, s: shift, al: alpha, g: green label (display only)}
+const TOP=[
+  {pos:[1,1],m:K('Shift',()=>{st.shift=!st.shift;st.alpha=false},'round sh')},
+  {pos:[2,1],m:K('Alpha',()=>{st.alpha=!st.alpha;st.shift=false},'round al')},
+  {pos:[5,1],m:K('Mode',()=>openMenu('mode'),'round'),s:K('Setup',()=>openMenu('setup'))},
+  {pos:[6,1],m:K('ON',()=>{clearAll();st.menu=null;st.hist=[]},'round blank'),s:K('ON',()=>{clearAll();st.menu=null;st.hist=[]})},
+  {pos:[1,2],m:K('Apps',()=>openMenu(st.cmplx?'capps':'mode'),'apps')},
+  {pos:[6,2],m:K('x',V('x'),'',XI),s:K('Σ■',na('Σ'),'','Σ■'),al:K('∏■',na('∏'))},
+  {pos:[1,3],m:K('Calc',na('Calc')),s:K('Solve',na('Solve')),al:K('=',na('='))},
+  {pos:[2,3],m:K('∫□■',na('∫'),'','<span class="int">∫<span class="lim"><b class="bo"></b><b class="bo"></b></span></span><b class="bf big"></b>'),s:K('d/dx',na('d/dx'),'','<span class="sfr"><span>d</span><span>dx</span></span><b class="bf"></b>'),al:K(':',na(':'))},
+  {pos:[5,3],m:K('log■□',fn('logab','log('),'','log<b class="bf sm"></b><b class="bo tall"></b>'),s:K('log',fn('log','log(')),al:K('10■',fn('tenpow','10^('),'','10<span class="sup"><b class="bf"></b></span>')},
+  {pos:[6,3],m:K('ln',fn('ln','ln(')),s:K('e■',fn('epow','e^('),'',IT('e')+'<span class="sup"><b class="bf"></b></span>'),al:K('e',ins(T('e','const',Math.E)),'',IT('e'))},
+];
+const FROWS=[
+  [{m:K('■/□',ins(T('⁄','frac')),'','<span class="fr"><b class="bf"></b><i></i><b class="bo"></b></span>'),s:K('■□/□',ins(T('⁄','frac')),'','<b class="bf"></b><span class="fr"><b class="bo"></b><i></i><b class="bo"></b></span>'),al:K('i',na('情報'))},
+   {m:K('■√□',fn('root','ⁿ√('),'','<b class="bf sm"></b>√<b class="bo"></b>'),g:'DEC'},
+   {m:K('√■',fn('sqrt','√('),'','√<b class="bf"></b>'),s:K('∛',fn('cbrt','∛('),'','∛‾'),g:'HEX'},
+   {m:K('x²',ins(T('²','post','sq')),'',XI+'<sup>2</sup>'),s:K('x³',ins(T('³','post','cube')),'',IT('x')+'³'),g:'PEN'},
+   {m:K('x■',ins(T('^(','pow')),'',XI+'<sup><b class="bf"></b></sup>'),g:'BIN'},
+   {m:K('x⁻¹',ins(T('⁻¹','post','inv')),'',XI+'<sup>-1</sup>'),s:K('x!',ins(T('!','post','fact')),'',IT('x')+'!'),g:'OCT'}],
+  [{m:K('(−)',ins(T('−','neg')),'','(—)'),al:K('A',V('A'),'',GB('A'))},
+   {m:K('°′″',dmsKey,'','<span class="dms">°<i>′</i><i>″</i></span>'),s:K('←',na('←')),al:K('B',V('B'),'',GB('B'))},
+   {m:K('Abs',absKey),al:K('C',V('C'),'',GB('C'))},
+   {m:K('sin',fn('sin','sin(')),s:K('sin⁻¹',fn('asin','sin⁻¹('),'','sin<span class="sup">-1</span>'),al:K('D',V('D'),'',GB('D'))},
+   {m:K('cos',fn('cos','cos(')),s:K('cos⁻¹',fn('acos','cos⁻¹('),'','cos<span class="sup">-1</span>'),al:K('E',V('E'),'',GB('E'))},
+   {m:K('tan',fn('tan','tan(')),s:K('tan⁻¹',fn('atan','tan⁻¹('),'','tan<span class="sup">-1</span>'),al:K('F',V('F'),'',GB('F'))}],
+  [{m:K('STO',()=>{st.sto=!st.sto;st.rcl=false}),s:K('Recall',()=>openMenu('recall'))},
+   {m:K('Eng',engKey),s:K('∠',angKey,'',`<span class="gb">⌈<span class="k0">${IT('∠')}</span>⌉</span>`),al:K('i',ins(T('i','imag')),'',`<span class="k0">←</span><span class="g0">${IT('i')}</span>`)},
+   {m:K('(',ins(T('(','lp'))),al:K('x',V('x'),'',IT('x'))},
+   {m:K(')',rpKey),s:K(',',ins(T(',','comma')),'','<b>,</b>'),al:K('y',V('y'),'',IT('y'))},
+   {m:K('F↔D',fdKey,'','F↔\uFE0ED'),s:K('ab/c↔d/c',fdKey,'',IT('ab/c')+'↔\uFE0E'+IT('d/c')),al:K('z',V('z'),'',IT('z'))},
+   {m:K('M+',()=>mAdd(1)),s:K('M−',()=>mAdd(-1),'','M-'),al:K('M',V('M'))}],
+];
+const D=c=>({m:K(c,ins(T(c,'d',c)))});
+const NROWS=[
+  [{...D('7'),s:K('C-Value',na('定数'))},{...D('8'),s:K('Convt',na('単位換算'))},{...D('9'),s:K('Clear',()=>openMenu('clr'))},
+   {m:K('DEL',del,'gray'),s:K('Insert',na('Insert'))},{m:K('CA',clearAll,'gray'),s:K('OFF',na('OFF'))}],
+  [D('4'),D('5'),D('6'),{m:K('×',ins(T('×','op','*'))),s:K('nPr',ins(T('P','op','P')))},{m:K('÷',ins(T('÷','op','/'))),s:K('nCr',ins(T('C','op','C')))}],
+  [D('1'),D('2'),D('3'),{m:K('+',ins(T('+','op','+'))),s:K('Pol(',fn('pol','Pol('))},{m:K('−',ins(T('−','op','-'))),s:K('Rec(',fn('rec','Rec('))}],
+  [{...D('0'),s:K('Round',fn('round','Round('))},{...D('.'),s:K('Rand',ins(T('Ran#','rand'))),al:K('i~Rand',fn('irand','RanInt#('))},
+   {m:K('×10ˣ',ins(T('×₁₀','exp10'))),s:K('π',ins(T('π','const',Math.PI)))},
+   {m:K('Ans',ins(T('Ans','ans'))),s:K('%',ins(T('%','post','pct'))),al:K('PreAns',ins(T('PreAns','preans')))},
+   {m:K('=',evaluate)}],
+];
+
+
+function keyEl(d,id){
+  const w=document.createElement('div');w.className='kw';
+  const lb=document.createElement('div');lb.className='lbl';
+  const shs=d.s?(d.s.h||d.s.l):'';const als=d.al?(d.al.h||d.al.l):(d.g?`<span style="color:var(--lb-green)">${d.g}</span>`:'');
+  lb.innerHTML=`<span class="sh">${shs}</span><span class="al">${als}</span>`;
+  const b=document.createElement('button');b.type='button';b.className='k '+(d.m.cls||'');b.textContent=d.m.l;if(d.m.h)b.innerHTML=d.m.h;b.dataset.l=d.m.l;b.id=id;if(/\bblank\b/.test(d.m.cls||'')){b.textContent='';b.setAttribute('aria-label',d.m.l)}
+  b.addEventListener('click',()=>press(d));
+  w.append(lb,b);return w;
+}
+function buildKeys(){
+  const top=document.getElementById('top');
+  TOP.forEach((d,i)=>{const el=keyEl(d,'kt'+i);el.style.gridColumn=d.pos[0];el.style.gridRow=d.pos[1];top.append(el)});
+  const dp=document.createElement('div');dp.className='dpad';
+  [['u','▲',()=>histNav(1)],['d','▼',()=>histNav(-1)],['l','◀',()=>move(-1)],['r','▶',()=>move(1)]].forEach(([c,l,a])=>{
+    const b=document.createElement('button');b.type='button';b.className='k '+c;b.textContent=l+'\uFE0E';b.dataset.l=l;b.id='kd'+c;b.setAttribute('aria-label',l);
+    b.addEventListener('click',()=>press({m:K(l,a)}));dp.append(b)});
+  top.append(dp);
+  const rf=document.getElementById('rowsF');
+  FROWS.forEach((r,i)=>{const row=document.createElement('div');row.className='rowf';r.forEach((d,j)=>row.append(keyEl(d,`kf${i}${j}`)));rf.append(row)});
+  const rn=document.getElementById('rowsN');
+  NROWS.forEach((r,i)=>{const row=document.createElement('div');row.className='rown';r.forEach((d,j)=>row.append(keyEl(d,`kn${i}${j}`)));rn.append(row)});
+}
+
+/* ======================= key handling ======================= */
+function press(d){
+  const isMod=d.m.l==='Shift'||d.m.l==='Alpha';
+  if(st.menu&&!isMod){menuKey(d);render();return}
+  let act=d.m.a;
+  if(!isMod){
+    if(st.sto||st.rcl){ // STO/Recall + variable key
+      const name=/^[0-9]$/.test(d.m.l)?d.m.l:(d.al&&['A','B','C','D','E','F','x','y','z','M'].includes(d.al.l))?d.al.l:(d.m.l==='x'?'x':null);
+      if(name){st.sto?storeVar(name):recallVar(name);st.sto=st.rcl=false;st.shift=st.alpha=false;render();return}
+      if(d.m.l==='CA'||d.m.l==='ON'){st.sto=st.rcl=false}
+    }
+    if(st.shift&&d.s)act=d.s.a; else if(st.alpha&&/^[0-9]$/.test(d.m.l))act=V(d.m.l); else if(st.alpha&&d.al)act=d.al.a;
+    st.shift=st.alpha=false;
+  }
+  act();render();
+}
+function insertTok(toks){
+  if(st.justEval){
+    const t0=toks[0];
+    const cont=['op','post','pow','frac','exp10','angle','conv'].includes(t0.t);
+    st.tok=cont?[T('Ans','ans')]:[];st.cur=st.tok.length;st.justEval=false;st.view='dec';st.hi=-1;
+  }
+  // after CA the real unit shows just "−" for the minus key and reads it as a negative sign
+  else if(!st.tok.length&&toks.length===1&&toks[0].t==='op'&&toks[0].v==='-'){toks=[T('−','neg')]}
+  st.tok.splice(st.cur,0,...toks);st.cur+=toks.length;st.msg=null;
+}
+function dmsKey(){if(st.justEval&&st.last){st.view=st.view==='dms'?'dec':'dms';return}insertTok([T('°','dms')])}
+function angKey(){if(!st.cmplx){setMsg('∠ は 2:Complex で使えます');return}insertTok([T('∠','angle')])}
+function fdKey(){if(st.justEval&&st.last)st.view=st.view==='frac'?'dec':'frac'}
+function engKey(){if(st.justEval&&st.last){st.view=st.view==='eng'?'dec':'eng';return}if(st.cmplx)insertTok([T('i','imag')])}
+function move(d){if(st.justEval){st.justEval=false;st.hi=-1;st.cur=st.tok.length}st.cur=Math.max(0,Math.min(st.tok.length,st.cur+d))}
+function absKey(){insertTok([T('|','fn','abs'),T('|','rp','absclose')]);st.cur--}
+function rpKey(){if(!st.justEval&&st.tok[st.cur]&&st.tok[st.cur].v==='absclose'){st.cur++;return}insertTok([T(')','rp')])}
+function del(){if(st.justEval){st.justEval=false;st.hi=-1;st.cur=st.tok.length}
+  if(st.cur>0){const t=st.tok[st.cur-1];
+    if(t.v==='absclose'){st.cur--}                                   // step back into the |□| box
+    else if(t.v==='abs'&&st.tok[st.cur]&&st.tok[st.cur].v==='absclose'){st.tok.splice(st.cur-1,2);st.cur--}
+    else{st.tok.splice(st.cur-1,1);st.cur--}}
+  st.msg=null}
+function clearAll(){st.hi=-1;st.tok=[];st.cur=0;st.scroll=0;st.justEval=false;st.last=null;st.view='dec';st.msg=null;st.sto=st.rcl=false;st.shift=st.alpha=false}
+function clearMem(){for(const k in st.vars)st.vars[k]=Cx(0);st.ans=Cx(0);clearAll();setMsg('メモリーをクリアしました')}
+// replay: ▲/▼ show past expressions together with their answers (as on the real unit)
+function histShown(){return st.hi>=0?st.hi:(st.justEval&&st.hist.length?0:-1)} // 0 = newest
+function histNav(d){
+  if(st.menu)return;
+  if(!st.hist.length)return;
+  const n=Math.max(0,Math.min(st.hist.length-1,histShown()+d));
+  const h=st.hist[st.hist.length-1-n];st.hi=n;
+  st.tok=h.tok.slice();st.cur=st.tok.length;st.last=h.r;st.justEval=true;st.view='dec';st.msg=null;
+}
+function mAdd(sign){
+  let v;if(st.justEval&&st.last&&!st.last.pair)v=st.last.v;else{v=evalSafe();if(v===null)return}
+  st.vars.M=sign>0?add(st.vars.M,v):sub(st.vars.M,v);st.ans=v;st.last={v,note:sign>0?'M+':'M−'};st.justEval=true;st.view='dec';
+}
+function evalSafe(){try{const r=run(st.tok);if(r.pair)return Cx(r.a);return r.v}catch(e){setMsg(e.message);return null}}
+function storeVar(n){
+  let v;
+  if(st.justEval&&st.last){v=st.last.pair?Cx(st.last.a):st.last.v;st.tok=[T('Ans','ans')]}else if(st.tok.length){v=evalSafe();if(v===null)return}else{v=st.ans;st.tok=[T('Ans','ans')]}
+  st.vars[n]=v;st.ans=v;st.last={v,sto:n};st.justEval=true;st.view='dec';
+}
+function recallVar(n){st.last={v:st.vars[n]};st.justEval=true;st.tok=[T(vn(n),'var',n)];st.cur=1;st.view='dec'}
+function setMsg(m){st.msg=m;st.last=null}
+
+const APPS=[['Calculate',1],['Complex',1],['Base-N',0],['Matrix',0],['Vector',0],['Statistics',0],['Distribution',0],['Spreadsheet',0]];
+const CAPPS=[['Argument',T('Arg(','fn','arg')],['Conjugate',T('Conjg(','fn','conj')],['Real Part',T('Real(','fn','re')],['Imaginary Part',T('Imag(','fn','im')],
+  ['▶r∠θ',T('▶r∠θ','conv','polar')],['▶a+bi',T('▶a+bi','conv','rect')]];
+// manual p.39: Apps shows 1–4 on the first page; ▼ shows a second page 1:▶r∠θ 2:▶a+bi
+const CPAGES=[[0,1,2,3],[4,5]];
+function pickC(n){const idx=CPAGES[st.msel-1][n-1];if(idx===undefined)return;st.menu=null;insertTok([CAPPS[idx][1]])}
+function rclNum(x){ // Recall list (as on the real unit): each number takes at most 6 characters, cut off (not rounded);
+  // ×10ⁿ with one decimal when it does not fit or is below 0.01
+  if(Math.abs(x)<1e-12)return '0';
+  const neg=x<0,s=neg?'−':'',a=Math.abs(x),room=neg?5:6;let e=Math.floor(Math.log10(a));
+  const n=Math.max(1,e+1);
+  if(n>room||e<-2){let m=a/Math.pow(10,e);if(m>=10-1e-12){m/=10;e++}
+    // the whole number fits 6 places: mantissa + 2 for ×10 + exponent digits (−1×10⁵, 1.2×10⁶, 1×10¹⁰)
+    const room2=4-String(Math.abs(e)).length-(neg?1:0),dd=Math.max(0,room2-2);m=Math.floor(m*Math.pow(10,dd)+1e-6)/Math.pow(10,dd);
+    return s+String(m)+`<span class="x10">×10</span><sup>${e<0?'−'+(-e):e}</sup>`}
+  const d=Math.max(0,room-n-1);return s+String(Number((Math.floor(a*Math.pow(10,d)+1e-6)/Math.pow(10,d)).toFixed(d)));
+}
+function shortVal(z){
+  if(z.im===0)return rclNum(z.re);
+  const im=Math.abs(z.im)===1?'':rclNum(Math.abs(z.im));
+  return (z.re===0?(z.im<0?'−':''):rclNum(z.re)+(z.im<0?'−':'+'))+im+'i';
+}
+function recallHTML(){
+  const rows=st.msel===1?[['A','B'],['C','D'],['E','F'],['M','x'],['y','z']]:[['0','1'],['2','3'],['4','5'],['6','7'],['8','9']];
+  const cell=k=>`<span>${vH(k)}=${shortVal(st.vars[k]).replace(/i$/,'<i>i</i>')}</span>`;
+  return '<div class="rcl">'+rows.map(r=>r.map(cell).join('')).join('')+'</div>';
+}
+const CLR=[['Setup Data','Clear Setup?'],['Memory','Clear Memory?'],['Initialize All','Initialize All?']];
+function doClear(n){
+  if(n===1||n===3){st.rad=false;st.polar=false;st.view='dec'}
+  if(n===2||n===3){for(const k in st.vars)st.vars[k]=Cx(0);st.ans=Cx(0);st.preAns=Cx(0)}
+  if(n===3){st.hist=[];st.hi=-1}
+}
+function clrHTML(){
+  const L=a=>'<div class="cmenu clr">'+a.map(([t,c])=>`<div${c?' style="text-align:center"':''}>${t||'&nbsp;'}</div>`).join('')+'</div>';
+  if(st.menu==='clr')return L([['Clear:'],['1:Setup Data'],['2:Memory'],['3:Initialize All']]);
+  if(st.menu==='clrq')return L([[CLR[st.msel-1][1]],[''],['[=]    :Yes'],['[CA]   :Cancel']]);
+  return L([['Complete!',1],[CLR[st.msel-1][0]],[''],['Press [CA] key',1]]);
+}
+function cappsHTML(){
+  // as on the real unit: large lines filling the screen, no highlight, a scroll bar on the right
+  const pg=CPAGES[st.msel-1],t=(st.msel-1)*50;
+  return '<div class="cmenu">'+pg.map((idx,j)=>`<div>${j+1}:${CAPPS[idx][0]}</div>`).join('')+'<div>&nbsp;</div>'.repeat(4-pg.length)+`<i class="sb" style="top:${t}%;height:50%"></i></div>`;
+}
+function openMenu(kind){st.menu=kind;st.msel=(kind==='capps'||kind==='recall')?1:(st.cmplx?2:1);st.shift=st.alpha=false;st.msg=null}
+function pickApp(n){
+  if(!APPS[n-1][1]){st.menu=null;setMsg(`${n}:${APPS[n-1][0]} は未対応`);return}
+  st.cmplx=n===2;st.menu=null;clearAll();st.hist=[]; // manual p.20: changing the mode clears the replay history
+}
+function menuKey(d){
+  const k=d.m.l;
+  // Shift+9 Clear: menu -> [=] Yes / [CA] Cancel -> Complete! Press [CA] key (as on the real unit)
+  if(st.menu==='clr'){if(/^[123]$/.test(k)){st.menu='clrq';st.msel=Number(k)}else if(k==='CA'||k==='ON')st.menu=null;return}
+  if(st.menu==='clrq'){if(k==='='){doClear(st.msel);st.menu='clrdone'}else if(k==='CA'||k==='ON')st.menu=null;return}
+  if(st.menu==='clrdone'){if(k==='CA'||k==='ON'){st.menu=null;clearAll()}return}
+  if(k==='CA'||k==='ON'||k==='Mode'||k==='Apps'){st.menu=null;return}
+  if(st.menu==='recall'){ // Shift+STO: list of all memories, ▼/▲ switch between letters and digits
+    if(k==='▼'){st.msel=2;return} if(k==='▲'){st.msel=1;return}
+    // pressing the key of a memory (no Alpha needed) puts that name into the input line; digits are shown underlined
+    const name=/^[0-9]$/.test(k)?k:k==='x'?'x':(d.al&&['A','B','C','D','E','F','x','y','z','M'].includes(d.al.l))?d.al.l:null;
+    st.menu=null;st.alpha=st.shift=false;if(name){if(st.justEval){st.tok=[];st.cur=0;st.justEval=false;st.last=null}V(name)()}return;
+  }
+  if(st.menu==='capps'){
+    if(k==='▼')st.msel=2;
+    else if(k==='▲')st.msel=1;
+    else if(/^[1-4]$/.test(k))pickC(Number(k));
+    return;
+  }
+  if(st.menu==='mode'){
+    const s=st.msel;
+    if(k==='▶')st.msel=s%8+1;
+    else if(k==='◀')st.msel=(s+6)%8+1;
+    else if(k==='▼'||k==='▲')st.msel=s>4?s-4:s+4;
+    else if(k==='=')pickApp(st.msel);
+    else if(/^[1-8]$/.test(k))pickApp(Number(k));
+  }else if(st.menu==='setup'){
+    if(k==='1'){st.rad=false;st.menu=null}
+    else if(k==='2'){st.rad=true;st.menu=null}
+    else if(k==='3'){st.polar=false;st.menu=null}
+    else if(k==='4'){st.polar=true;st.menu=null}
+  }
+}
+
+function evaluate(){
+  if(!st.tok.length)return;
+  try{
+    const r=run(st.tok);
+    st.hist.push({tok:st.tok.slice(),r});st.hi=-1;
+    st.preAns=st.ans;
+    if(r.pair){st.vars.x=Cx(r.a);st.vars.y=Cx(r.b);st.ans=Cx(r.a)}
+    else st.ans=r.v;
+    st.last=r;st.justEval=true;st.view='dec';st.msg=null;
+  }catch(e){setMsg(e.message)}
+}
+
+/* ======================= parser ======================= */
+function lex(toks){
+  const out=[];
+  for(const t of toks){
+    if(t.t==='d'){const p=out[out.length-1];if(p&&p.t==='num')p.v+=t.v;else out.push({t:'num',v:t.v})}
+    else out.push({...t});
+  }
+  for(const t of out)if(t.t==='num'){if(!/^\d*\.?\d*$/.test(t.v)||t.v==='.')throw E('Syntax ERROR');t.n=parseFloat(t.v)}
+  return out;
+}
+function fact(n){if(n<0||!Number.isInteger(n)||n>69)throw E('Math ERROR');let r=1;for(let k=2;k<=n;k++)r*=k;return r}
+function run(toks){
+  const L=lex(toks);let i=0;
+  const peek=()=>L[i],next=()=>L[i++];
+  const isOp=(t,v)=>t&&t.t==='op'&&t.v===v;
+  const startsPrimary=t=>t&&['num','var','const','ans','preans','fn','lp','imag','rand'].includes(t.t);
+  function args(){const a=[expr()];while(peek()&&peek().t==='comma'){next();a.push(expr())}if(peek()&&peek().t==='rp')next();return a}
+  const R1=(a,f)=>Cx(f(realOf(a)));
+  const ang=x=>x*AU(), unang=x=>x/AU();
+  const F={
+    sin:a=>R1(a,x=>Math.sin(ang(x))),cos:a=>R1(a,x=>Math.cos(ang(x))),
+    tan:a=>R1(a,x=>{const c=Math.cos(ang(x));if(Math.abs(c)<1e-15)throw E('Math ERROR');return Math.sin(ang(x))/c}),
+    asin:a=>R1(a,x=>{if(Math.abs(x)>1)throw E('Math ERROR');return unang(Math.asin(x))}),
+    acos:a=>R1(a,x=>{if(Math.abs(x)>1)throw E('Math ERROR');return unang(Math.acos(x))}),
+    atan:a=>R1(a,x=>unang(Math.atan(x))),
+    sqrt:a=>{if(isReal(a)&&a.re>=0)return Cx(Math.sqrt(a.re));if(!st.cmplx)throw E('Math ERROR');const r=Math.sqrt(cabs(a)),t=carg(a)/2;return Cx(r*Math.cos(t),r*Math.sin(t))},
+    cbrt:a=>isReal(a)?Cx(Math.cbrt(a.re)):cpow(a,Cx(1/3)),
+    abs:a=>Cx(cabs(a)),arg:a=>Cx(unang(carg(a))),conj:a=>Cx(a.re,-a.im),re:a=>Cx(a.re),im:a=>Cx(a.im),
+    ln:a=>{if(isReal(a)&&a.re>0)return Cx(Math.log(a.re));if(!st.cmplx)throw E('Math ERROR');return clog(a)},
+    log:a=>{const l=F.ln(a);return Cx(l.re/Math.LN10,l.im/Math.LN10)},
+    tenpow:a=>cpow(Cx(10),a),epow:a=>cexp(a),
+    round:a=>Cx(Number(a.re.toPrecision(10)),Number(a.im.toPrecision(10))),
+  };
+  function primary(){
+    const t=next();if(!t)throw E('Syntax ERROR');
+    if(t.t==='num'){
+      let v=t.n;
+      if(peek()&&peek().t==='dms'){
+        next();
+        if(peek()&&peek().t==='num'&&L[i+1]&&L[i+1].t==='dms'){v+=next().n/60;next();
+          if(peek()&&peek().t==='num'&&L[i+1]&&L[i+1].t==='dms'){v+=next().n/3600;next()}}
+        if(st.rad)v=v*Math.PI/180;
+      }
+      return Cx(v);
+    }
+    if(t.t==='var')return st.vars[t.v];
+    if(t.t==='const')return Cx(t.v);
+    if(t.t==='ans')return st.ans;
+    if(t.t==='preans')return st.preAns;
+    if(t.t==='rand')return Cx(Math.floor(Math.random()*1000)/1000);
+    if(t.t==='imag'){if(!st.cmplx)throw E('Syntax ERROR');return Cx(0,1)}
+    if(t.t==='lp'){const v=expr();if(peek()&&peek().t==='rp')next();return v}
+    if(t.t==='fn'){
+      const a=args();
+      if(t.v==='pol'||t.v==='rec'){
+        if(a.length!==2)throw E('Argument ERROR');
+        const p=realOf(a[0]),q=realOf(a[1]);
+        if(t.v==='pol')return {pair:'pol',a:Math.hypot(p,q),b:unang(Math.atan2(q,p))};
+        return {pair:'rec',a:p*Math.cos(ang(q)),b:p*Math.sin(ang(q))};
+      }
+      if(t.v==='logab'){if(a.length===1)return F.log(a[0]);if(a.length!==2)throw E('Argument ERROR');const n=F.ln(a[1]),b=F.ln(a[0]);return div(n,b)}
+      if(t.v==='root'){if(a.length!==2)throw E('Argument ERROR');return cpow(a[1],div(Cx(1),a[0]))}
+      if(t.v==='irand'){if(a.length!==2)throw E('Argument ERROR');const lo=Math.ceil(realOf(a[0])),hi=Math.floor(realOf(a[1]));return Cx(lo+Math.floor(Math.random()*(hi-lo+1)))}
+      if(a.length!==1)throw E('Argument ERROR');
+      return F[t.v](a[0]);
+    }
+    throw E('Syntax ERROR');
+  }
+  function postfix(){let v=primary();
+    while(peek()&&(peek().t==='post'||peek().t==='pow')){
+      const p=next();
+      if(p.t==='pow'){const e=expr();if(peek()&&peek().t==='rp')next();v=cpow(v,e);continue}
+      if(p.v==='sq')v=mul(v,v);else if(p.v==='cube')v=mul(mul(v,v),v);else if(p.v==='inv')v=div(Cx(1),v);
+      else if(p.v==='fact')v=Cx(fact(realOf(v)));else if(p.v==='pct')v=Cx(v.re/100,v.im/100);
+    }
+    return v}
+  function pow10(){let b=postfix();while(peek()&&peek().t==='exp10'){next();const e=unaryRaw();b=mul(b,cpow(Cx(10),e))}return b}
+  function unaryRaw(){if(peek()&&peek().t==='neg'){next();return neg(unaryRaw())}return pow10()}
+  function frac(){let v=unaryRaw();while(peek()&&peek().t==='frac'){next();v=div(v,unaryRaw())}return v}
+  function angle(){let v=frac();while(peek()&&peek().t==='angle'){if(!st.cmplx)throw E('Syntax ERROR');next();const th=realOf(frac());v=mul(v,Cx(Math.cos(ang(th)),Math.sin(ang(th))))}return v}
+  function perm(){let v=angle();while(isOp(peek(),'P')||isOp(peek(),'C')){const t=next();const n=realOf(v),r=realOf(angle());
+    if(!Number.isInteger(n)||!Number.isInteger(r)||r<0||r>n)throw E('Math ERROR');let p=1;for(let k=0;k<r;k++)p*=(n-k);v=Cx(t.v==='P'?p:p/fact(r))}return v}
+  function mulL(){let v=perm();
+    for(;;){const t=peek();
+      if(isOp(t,'*')){next();v=mul(v,perm())}
+      else if(isOp(t,'/')){next();v=div(v,perm())}
+      else if(startsPrimary(t)){v=mul(v,perm())}
+      else break}
+    return v}
+  function expr(){let v=mulL();
+    for(;;){const t=peek();if(isOp(t,'+')){next();v=add(v,mulL())}else if(isOp(t,'-')){next();v=sub(v,mulL())}else break}
+    return v}
+  if(L[0]&&L[0].t==='fn'&&(L[0].v==='pol'||L[0].v==='rec')){
+    const r=primary();if(i<L.length)throw E('Syntax ERROR');return r;
+  }
+  let v=expr();
+  let form=null;
+  if(peek()&&peek().t==='conv'){if(!st.cmplx)throw E('Syntax ERROR');form=next().v}
+  if(i<L.length)throw E('Syntax ERROR');
+  if(!isFinite(v.re)||!isFinite(v.im))throw E('Math ERROR');
+  if(!st.cmplx&&!isReal(v))throw E('Math ERROR');
+  if(Math.abs(v.im)<1e-13*Math.max(1,Math.abs(v.re)))v=Cx(v.re);
+  if(Math.abs(v.re)<1e-13*Math.max(1,Math.abs(v.im)))v=Cx(0,v.im);
+  return {v,form};
+}
+
+/* ======================= display ======================= */
+function fmt(x){
+  if(Math.abs(x)<1e-12)return '0';
+  const r=Number(x.toPrecision(10)),a=Math.abs(r);
+  if(a>=1e10||a<0.01){ // Norm 1 (manual p.8, checked on the real unit): 10+ digit integers and values below 0.01 use ×10 notation
+    let [m,e]=r.toExponential(9).split('e');m=m.replace(/\.?0+$/,'');
+    return `${m}×10^${parseInt(e)}`.replace(/-/g,'−');
+  }
+  return r.toString().replace('-','−');
+}
+function engFmt(x){
+  if(x===0)return '0';
+  const e=Math.floor(Math.log10(Math.abs(x))/3)*3;const m=x/Math.pow(10,e);
+  return `${Number(m.toPrecision(10))}×10^${e}`.replace('-','−');
+}
+function toFrac(x){
+  if(!isFinite(x))return null;
+  const sign=x<0?'−':'';x=Math.abs(x);
+  let h1=1,h0=0,k1=0,k0=1,b=x;
+  for(let n=0;n<30;n++){const a=Math.floor(b);[h1,h0]=[a*h1+h0,h1];[k1,k0]=[a*k1+k0,k1];
+    if(k1>99999)return null;if(Math.abs(x-h1/k1)<1e-10*Math.max(1,x))break;b=1/(b-a);if(!isFinite(b))break}
+  if(Math.abs(x-h1/k1)>1e-10*Math.max(1,x))return null;
+  return k1===1?sign+h1:`${sign}${h1}⁄${k1}`;
+}
+function toDMS(v){
+  if(st.rad)v=v*180/Math.PI;
+  const sign=v<0?'−':'';v=Math.abs(v);
+  let d=Math.floor(v),m=Math.floor((v-d)*60),s=((v-d)*60-m)*60;
+  s=Math.round(s*100)/100;if(s>=60){s-=60;m++}if(m>=60){m-=60;d++}
+  return `${sign}${d}°${m}′${String(s.toFixed(2)).replace(/\.?0+$/,'')}″`;
+}
+function realStr(x){
+  if(st.view==='dms')return toDMS(x);
+  if(st.view==='eng')return engFmt(x);
+  if(st.view==='frac'){const f=toFrac(x);return f??fmt(x)}
+  return fmt(x);
+}
+function cstr(z,form){
+  const polar=form?form==='polar':st.polar;
+  if(st.cmplx&&polar&&!(z.im===0&&z.re>=0)){return `${realStr(cabs(z))}∠${fmt(carg(z)/AU())}`}
+  if(z.im===0)return realStr(z.re);
+  const im=Math.abs(z.im)===1?'':realStr(Math.abs(z.im));
+  if(z.re===0)return (z.im<0?'−':'')+im+'i';
+  return `${realStr(z.re)}${z.im<0?'−':'+'}${im}i`;
+}
+const LCDW=16; // characters per line on the real display
+function exprCells(){
+  let cnt=0;const cells=[];let curCell=null;
+  const esc=x=>x.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  st.tok.forEach((t,k)=>{
+    if(k===st.cur)curCell=cells.length;
+    let s=t.s;
+    if(t.t==='dms'){s=['°','′','″'][Math.min(cnt,2)];cnt++}else if(t.t!=='d')cnt=0;
+    if(t.t==='var'&&/^[0-9]$/.test(t.v)){cells.push(vH(t.v));return}
+    if(t.t==='imag'){cells.push('<i>i</i>');return}
+    if(t.v==='absclose'&&st.tok[k-1]&&st.tok[k-1].v==='abs')cells.push('□'); // empty box
+    for(const ch of [...s])cells.push(esc(ch));
+  });
+  if(curCell===null)curCell=cells.length;
+  return {cells,curCell};
+}
+function exprHTML(){
+  const {cells,curCell}=exprCells(),n=cells.length,showCur=!st.justEval;
+  const cap=s=>LCDW-(s>0?1:0);   // 16 columns; ◀ takes one, ▶ sits in the narrow edge column
+  let s=0;
+  if(n>LCDW&&showCur){
+    s=Math.min(st.scroll||0,n);
+    if(curCell<s)s=curCell;
+    while(curCell>s+cap(s))s++;
+  }
+  st.scroll=s;
+  const C=x=>`<span class="c">${x}</span>`,CUR='<span class="cur"></span>';
+  let h=s>0?'<span class="c ar">◀</span>':'';
+  const end=Math.min(n,s+cap(s));
+  for(let i=s;i<end;i++){if(showCur&&i===curCell)h+=CUR;h+=C(cells[i])}
+  if(showCur&&curCell>=end)h+=CUR;
+  if(end<n)h+='<span class="ra">▶</span>';
+  return h;
+}
+
+const ICON=[ // drawn after the real Mode screen (viewBox 60×40)
+ '<g fill="none" stroke="currentColor" stroke-width="3"><rect x="6" y="3" width="48" height="34"/><path d="M30 3v34M6 20h48"/></g><g font-size="15" font-weight="700" text-anchor="middle" fill="currentColor"><text x="18" y="17">×</text><text x="42" y="17">÷</text><text x="18" y="34">+</text><text x="42" y="34">−</text></g>',
+ '<rect x="1.5" y="5" width="57" height="30" fill="none" stroke="currentColor" stroke-width="3"/><text x="9" y="26" font-size="15" font-weight="700" text-anchor="middle" fill="currentColor">±</text><rect x="17" y="8" width="17" height="24" fill="currentColor"/><text x="25.5" y="28" font-size="20" font-weight="700" font-style="italic" text-anchor="middle" class="bgfill">i</text><path d="M55 30H38L54 12" fill="none" stroke="currentColor" stroke-width="3"/>',
+ '<g font-size="17" font-weight="700" fill="currentColor" text-anchor="middle"><text x="12" y="17">2</text><text x="30" y="17">5</text><text x="48" y="17">8</text><text x="17" y="37">10</text><text x="43" y="37">16</text></g>',
+ '<path d="M10 4H5v32h5M50 4h5v32h-5" fill="none" stroke="currentColor" stroke-width="3"/><g fill="currentColor"><rect x="13" y="9" width="5" height="4"/><rect x="21" y="9" width="5" height="4"/><rect x="29" y="9" width="5" height="4"/><rect x="37" y="9" width="5" height="4"/><rect x="13" y="18" width="5" height="4"/><rect x="21" y="18" width="5" height="4"/><rect x="29" y="18" width="5" height="4"/><rect x="37" y="18" width="5" height="4"/><rect x="13" y="27" width="5" height="4"/><rect x="21" y="27" width="5" height="4"/><rect x="29" y="27" width="5" height="4"/><rect x="37" y="27" width="5" height="4"/></g>',
+ '<g fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v36M4 33h54"/><path d="M12 33L30 8" stroke-dasharray="3 2"/><path d="M14 31L44 14M38 13h7v7"/></g>',
+ '<path d="M8 4v34h48M14 12v26M23 22v16M32 30v8M41 24v14M50 8v30" fill="none" stroke="currentColor" stroke-width="3"/>',
+ '<path d="M4 36h52M30 4v32M5 33c10 0 12-3 16-12s6-16 9-16 5 7 9 16 6 12 16 12" fill="none" stroke="currentColor" stroke-width="3"/>',
+ '<g fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="52" height="32"/><path d="M4 13h52M4 24h52M14 4v32"/><path d="M22 8.5h30" stroke-dasharray="6 2"/></g><g fill="currentColor"><rect x="8" y="17" width="3" height="4"/><rect x="8" y="28" width="3" height="4"/></g>',
+];
+function appsHTML(){
+  // real unit: 2 rows × 4 large icons, number box at the lower left, selected icon in reverse, name on the bottom line
+  const cells=APPS.map((a,k)=>{const n=k+1,sel=n===st.msel;
+    return `<div class="app${sel?' sel':''}"><span class="no">${n}</span><span class="ic"><svg viewBox="0 0 60 40" aria-hidden="true">${ICON[k]}</svg></span></div>`}).join('');
+  return `<div class="apps">${cells}</div><div class="appname">${st.msel}:${APPS[st.msel-1][0]}</div>`;
+}
+function render(){
+  const ex=document.getElementById('expr'),res=document.getElementById('res');
+  res.classList.remove('small','two');
+  if(st.menu==='mode'){ex.innerHTML=appsHTML();res.textContent='';}
+  else if(st.menu==='capps'){ex.innerHTML=cappsHTML();res.textContent='';}
+  else if(st.menu==='recall'){ex.innerHTML=recallHTML();res.textContent='';}
+  else if(/^clr/.test(st.menu||'')){ex.innerHTML=clrHTML();res.textContent='';}
+  else if(st.menu==='setup'){ex.innerHTML=`<div class="menu">1:Deg  2:Rad\n3:a+bi 4:r∠θ</div>`;res.textContent='';}
+  else{
+    if(st.justEval&&st.last&&st.last.sto){st.tok=st.tok.concat([T('→','op','sto'),T(st.last.sto,'var',st.last.sto)]);ex.innerHTML=exprHTML();st.tok=st.tok.slice(0,-2)}else ex.innerHTML=exprHTML();
+    if(st.msg){res.classList.add('small');res.textContent=st.msg}
+    else if(st.last&&st.justEval){
+      const r=st.last;
+      if(r.pair==='pol'){res.classList.add('small');res.textContent=`r=${fmt(r.a)}  θ=${st.view==='dms'?toDMS(r.b):fmt(r.b)}`}
+      else if(r.pair==='rec'){res.classList.add('small');res.textContent=`x=${fmt(r.a)}  y=${fmt(r.b)}`}
+      else{const z=r.v,pol=r.form?r.form==='polar':st.polar;
+        if(st.cmplx&&!pol&&!r.note&&z.re!==0&&z.im!==0){ // a+bi on two lines, as on the real display
+          const im=Math.abs(z.im)===1?'':realStr(Math.abs(z.im));res.classList.add('two');
+          res.innerHTML=`${realStr(z.re)}<br>${z.im<0?'−':'+'}${im}<i>i</i>`}
+        else{const s=(r.note||'')+cstr(r.v,r.form);res.textContent=s;if(s.length>16)res.classList.add('small')}}
+    } else res.textContent=st.tok.length?'':'0';
+  }
+  if(/×10\^/.test(res.innerHTML))res.innerHTML=res.innerHTML.replace(/×10\^([−-]?\d+)/g,'<span class="x10">×10</span><sup>$1</sup>');
+  const on=(id,v)=>document.getElementById(id).classList.toggle('on',!!v);
+  on('iS',st.shift);on('iA',st.alpha);on('iM',cabs(st.vars.M)!==0); /* M: lit while the independent memory M is not 0 */ on('iSto',st.sto);on('iC',st.cmplx&&!st.polar); /* manual p.4: i = answers in a+bi form, ∠ = answers in r∠θ form */
+  on('iD',!st.rad);on('iR',st.rad);on('iPol',st.cmplx&&st.polar);
+  const hs=histShown(),older=!st.menu&&st.hist.length>0&&hs<st.hist.length-1,newer=!st.menu&&hs>0;
+  on('iDn',(st.menu==='recall'&&st.msel===1)||st.menu==='mode'||newer);on('iUp',(st.menu==='recall'&&st.msel===2)||older);
+  // on the memory list the real unit shows only the ▼/▲ arrow in the status row
+  document.querySelector('.ind').classList.toggle('only-arrow',st.menu==='recall'||st.menu==='mode'||/^clr/.test(st.menu||''));
+  document.querySelectorAll('.k.sh').forEach(b=>b.classList.toggle('on',st.shift));
+  document.querySelectorAll('.k.al').forEach(b=>b.classList.toggle('on',st.alpha));
+  document.getElementById('vars').innerHTML=['A','B','C','D','E','F','x','y','z','M','0','1','2','3','4','5','6','7','8','9'].map(k=>[k,st.vars[k]]).map(([k,v])=>`<span>${vH(k)}=${cstr(v,null).replace(/^(.{9}).+$/,'$1…')}</span>`).join('');
+}
+buildKeys();render();
+
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  const map={'+':['+','op','+'],'-':['−','op','-'],'*':['×','op','*'],'/':['÷','op','/'],'(':['(','lp'],')':[')','rp'],',':[',','comma']};
+  if(st.menu&&/^[1-4]$/.test(e.key)){menuKey({m:{l:e.key}})}
+  else if(/^[0-9.]$/.test(e.key)){insertTok([T(e.key,'d',e.key)])}
+  else if(e.key===')'){rpKey()}
+  else if(map[e.key]){const m=map[e.key];insertTok([T(m[0],m[1],m[2])])}
+  else if(e.key==='^'){insertTok([T('^(','pow')])}
+  else if(e.key==='i'&&st.cmplx){insertTok([T('i','imag')])}
+  else if(e.key==='Enter'||e.key==='='){evaluate()}
+  else if(e.key==='Backspace'){del()}
+  else if(e.key==='Escape'){clearAll();st.menu=null}
+  else if(e.key==='ArrowLeft'){move(-1)} else if(e.key==='ArrowRight'){move(1)}
+  else return;
+  e.preventDefault();render();
+});
+
+</script>
+
+<script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script>
+</body></html>
