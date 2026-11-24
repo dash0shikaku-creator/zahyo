@@ -1,0 +1,16 @@
+{
+  "name": "座標計算トレーニング(Dash0)",
+  "short_name": "座標計算",
+  "description": "土地家屋調査士試験の記述式対策。複素数モードの関数電卓で座標計算を練習できます。",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16181b",
+  "theme_color": "#16181b",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
