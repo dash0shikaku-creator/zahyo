@@ -1087,8 +1087,8 @@ function supDraw(){
     return `<li class="${i<cur?'done':i===cur?'now':''}"><b>${i<cur?'✓ ':''}${s.t}</b><p>${s.p}</p><div class="keys">${ks}</div></li>`}).join('')
     +(pos>=SUP.flat.length?'<li class="now" style="list-style:none"><div class="fin">完了! 画面の答えを、きまりどおりに丸めて解答欄に入れ、答え合わせをしてみましょう。</div></li>':'');
   if(pos<SUP.flat.length){const b=supBtnFor(SUP.flat[pos][1]);if(b)b.classList.add('guide');$('supNext').textContent=SUP.flat[pos][1]}
-  if(cur!==SUP.lastCur){SUP.lastCur=cur;const li=$('supSteps').children[Math.min(cur,SUP.steps.length)];if(li&&pos>0)try{li.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}
   else $('supNext').textContent='完了';
+  if(cur!==SUP.lastCur){SUP.lastCur=cur;const li=$('supSteps').children[Math.min(cur,SUP.steps.length)];if(li&&pos>0)try{li.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}
 }
 function supReset(){SUP.lastCur=-1;clearMem();clearAll();st.menu=null;st.msg=null;SUP.pos=0;$('supMsg').textContent='';render();supDraw()}
 function supSet(on){
