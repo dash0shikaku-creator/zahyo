@@ -7,6 +7,15 @@
 <meta name="description" content="土地家屋調査士試験の記述式対策。複素数モードの関数電卓で座標計算を練習できる無料のWeb電卓です。"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 .toplink{display:inline-block;font-size:13px;color:var(--ink-soft);text-decoration:none;margin-bottom:4px}.toplink:hover{color:var(--pencil)}
 .note-free{font-size:12px;color:var(--ink-soft)}
+.supad{margin:10px 0;padding:10px 12px;border:2px solid #ffbf3c;border-radius:6px;background:rgba(255,191,60,.12);font-size:14px;line-height:1.6}
+.supad[hidden]{display:none!important}
+.supad b{display:block;margin-bottom:2px}
+.supad .btn{margin-top:8px}
+.qrow{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.qrow .tblwrap{flex:0 1 auto}
+.qfig{flex:1 1 200px;max-width:300px;min-width:180px;aspect-ratio:1/1;border:1px solid var(--line);border-radius:6px;background:var(--sheet)}
+.qfig text{font-family:var(--f-mono,monospace)}
+
 </style></head><body>
 <title>座標計算ドリル</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +57,30 @@ h1 small{display:block;font-size:13px;font-weight:700;color:var(--pencil);letter
 .tab{font:inherit;font-size:14px;padding:6px 12px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;cursor:pointer}
 .tab[aria-selected="true"]{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
 .timer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px dashed var(--line);border-radius:4px}
+/* ===== support mode: highlight the next key ===== */
+.k.guide{outline:4px solid #ffbf3c!important;outline-offset:2px;animation:gp 1s ease-in-out infinite;position:relative;z-index:2}
+@keyframes gp{50%{outline-color:#ff5a3c}}
+@media (prefers-reduced-motion:reduce){.k.guide{animation:none}}
+.k.wrong{outline:4px solid #ff3b2f!important;outline-offset:2px}
+.btn.supon{background:#ffbf3c;border-color:#d99a12;color:#1d1d1d}
+.supbox{border:2px solid #ffbf3c;border-radius:6px;padding:10px 12px;background:var(--sheet,#fffdf5);font-size:13px;line-height:1.6}
+.supbox[hidden]{display:none!important}
+.supbox .sh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.supbox .sh b{font-size:14px}
+.supbox .nk{font-family:var(--f-mono,monospace);font-weight:700;background:#ffbf3c;color:#1d1d1d;border-radius:4px;padding:1px 8px}
+.supbox ol{margin:0;padding-left:1.4em}
+.supbox li{margin:4px 0;color:var(--ink-soft,#666)}
+.supbox li.now{color:var(--ink,#111)}
+.supbox li.done{opacity:.6}
+.supbox li p{margin:2px 0}
+.supbox .keys{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+.supbox .kc{font-family:var(--f-mono,monospace);font-size:12px;border:1px solid var(--line,#ccc);border-radius:3px;padding:0 5px;background:#fff;color:#222}
+.supbox .kc.num{border-color:transparent;background:transparent;padding:0 1px}
+.supbox .kc.ok{opacity:.45}
+.supbox .kc.cur{outline:2px solid #ff8a00;background:#fff3d6}
+.supbox .msg{color:#b3261e;min-height:1.2em;margin-top:4px}
+.supbox .fin{color:#1f7a3d;font-weight:700;margin-top:4px}
+
 .timer .t{font-family:var(--f-mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;min-width:6.2ch}
 .timer .best{font-size:12.5px;color:var(--ink-soft);margin-left:auto}
 .btn{font:inherit;font-size:14px;font-weight:700;padding:7px 14px;border-radius:4px;border:1px solid var(--ink);background:var(--sheet);color:var(--ink);cursor:pointer}
@@ -73,7 +106,7 @@ details.sol{border-top:1px solid var(--line);padding-top:10px}
 details.sol summary{cursor:pointer;font-weight:700}
 .sol ol{padding-left:1.3em;margin:8px 0 0}
 .sol h3{font-size:14px;margin:12px 0 0}
-.sol code{font-family:var(--f-mono);background:var(--paper);padding:1px 5px;border-radius:3px;border:1px solid var(--line);white-space:nowrap}
+.sol code{font-family:var(--f-mono);background:var(--paper);padding:1px 5px;border-radius:3px;border:1px solid var(--line);white-space:nowrap;display:inline-block;line-height:1.35;margin:1px 0}
 .hint{font-size:12.5px;color:var(--ink-soft)}
 .log{font-size:13px;color:var(--ink-soft)}
 .log b{color:var(--ink);font-family:var(--f-mono);font-variant-numeric:tabular-nums}
@@ -211,23 +244,31 @@ details.sol summary{cursor:pointer;font-weight:700}
       <button class="tab" role="tab" id="tab-pol" aria-selected="true" data-type="pol">距離・方向角</button>
       <button class="tab" role="tab" id="tab-rec" aria-selected="false" data-type="rec">座標を求める</button>
       <button class="tab" role="tab" id="tab-area" aria-selected="false" data-type="area">面積(座標法)</button>
+      <button class="tab" role="tab" id="tab-int" aria-selected="false" data-type="int">2直線の交点</button>
     </div>
     <div class="timer">
       <span class="t" id="time">0:00.0</span>
       <button class="btn primary" id="tStart">スタート</button>
       <button class="btn" id="tStop">ストップ</button>
       <button class="btn" id="tReset">リセット</button>
+      <button class="btn" id="supBtn" type="button" aria-pressed="false">サポートモード</button>
       <span class="best" id="best"></span>
     </div>
     <section class="q" id="q"></section>
+    <section class="supbox" id="sup" hidden aria-live="polite">
+      <div class="sh"><b>サポートモード</b><span>次に押すキー <span class="nk" id="supNext">-</span></span><button class="btn" id="supReset" type="button">最初から</button></div>
+      <ol id="supSteps"></ol>
+      <div class="msg" id="supMsg"></div>
+    </section>
     <form class="ans" id="ans" autocomplete="off"></form>
     <div class="actions">
       <button class="btn red" id="check">答え合わせ</button>
       <button class="btn" id="next">次の問題</button>
     </div>
+    <div class="supad" id="supAd" hidden><b>押す順番がわからなかったら</b> サポートモードなら、電卓の次に押すキーが光って、1つずつ案内します。<button class="btn primary" id="supAdBtn" type="button">サポートモードで解いてみる</button></div>
     <details class="sol" id="sol"><summary>解き方と電卓の打ち方</summary><div id="solBody"></div></details>
     <p class="log" id="log"></p>
-    <p class="note-free">キヤノンの関数電卓 F-570X をモデルに、個人が作成した練習用の電卓です。公式のソフトではないため、実物と異なる動作をする場合があります。学習目的であれば、どなたでも無料で自由にお使いください。内容を改変しての再配布はご遠慮ください。</p>
+    <p class="note-free">キヤノンの関数電卓 F-570X をモデルに、個人が作成した練習用の電卓です。公式のソフトではないため、実物と異なる動作をする場合があります。学習目的であれば、どなたでも無料で自由にお使いください。内容を改変しての再配布はご遠慮ください。本試験で使える電卓の条件は、法務省の<a href="https://www.moj.go.jp/content/001465027.pdf" target="_blank" rel="noopener">「土地家屋調査士試験の筆記試験における電卓の使用について」</a>で各自ご確認ください。</p>
   </main>
 
   <aside class="calc" aria-label="関数電卓">
@@ -786,12 +827,62 @@ function genArea(){
   s2=Math.abs(s2);
   return {type:'area',P,s2:s2/10000,area:Math.floor(s2/200)/100};
 }
+function genInt(){
+  for(let tries=0;tries<50;tries++){
+    const P0={x:rnd(120,180),y:rnd(120,180)};
+    const t1=rnd(0,360),t2=t1+(Math.random()<.5?1:-1)*rnd(35,145);
+    const on=(th,s)=>({x:r2(P0.x+s*Math.cos(th*DEG)),y:r2(P0.y+s*Math.sin(th*DEG))});
+    const sg=()=>(Math.random()<.5?-1:1);
+    const a1=sg()*rnd(4,12),b1=a1+sg()*rnd(8,16),c1=sg()*rnd(4,12),d1=c1+sg()*rnd(8,16);
+    const A=on(t1,a1),B=on(t1,b1),C=on(t2,c1),D=on(t2,d1);
+    const ux=B.x-A.x,uy=B.y-A.y,wx=D.x-C.x,wy=D.y-C.y,den=ux*wy-uy*wx;
+    if(Math.abs(den)<20)continue;
+    const t=((C.x-A.x)*wy-(C.y-A.y)*wx)/den;
+    const X=A.x+t*ux,Y=A.y+t*uy;
+    return {type:'int',A,B,C,D,t,raw:{x:X,y:Y},P:{x:r2(X),y:r2(Y)}};
+  }
+}
 const names=['A','B','C','D'];
 function ptTable(rows){
   return `<div class="tblwrap"><table class="pts"><tr><th>点</th><th>X座標</th><th>Y座標</th></tr>${rows.map(([n,p])=>`<tr><th>${n}</th><td>${f2(p.x)}</td><td>${f2(p.y)}</td></tr>`).join('')}</table></div>`;
 }
+
+/* small figure next to the point table (north up: screen x = Y, screen y = −X) */
+function qFig(p){
+  const pts=[],lab=[],unk=[];
+  const add=(n,q,u)=>{pts.push(q);lab.push(n);unk.push(!!u)};
+  if(p.type==='pol'){add('A',p.A);add('B',p.B)}
+  else if(p.type==='rec'){add('A',p.A);add('B',p.B,1)}
+  else if(p.type==='int'){add('A',p.A);add('B',p.B);add('C',p.C);add('D',p.D);add('P',p.P,1)}
+  else p.P.forEach((q,k)=>add(names[k],q));
+  const W=240,H=240,pad=34;
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;pts.forEach(q=>{x0=Math.min(x0,q.y);x1=Math.max(x1,q.y);y0=Math.min(y0,q.x);y1=Math.max(y1,q.x)});
+  const sc=Math.min((W-2*pad)/Math.max(x1-x0,1e-6),(H-2*pad)/Math.max(y1-y0,1e-6));
+  const cx=(x0+x1)/2,cy=(y0+y1)/2;
+  const S=q=>[W/2+(q.y-cx)*sc,H/2-(q.x-cy)*sc];
+  const sp=pts.map(S);let g='';
+  const ln=(a,b,dash,col,w)=>`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${col||'var(--ink)'}" stroke-width="${w||2}"${dash?' stroke-dasharray="5 4"':''}/>`;
+  if(p.type==='area'){g+=`<polygon points="${sp.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="var(--pencil)" fill-opacity=".12" stroke="var(--pencil)" stroke-width="2"/>`}
+  else if(p.type==='pol'||p.type==='rec'){g+=ln(sp[0],sp[1],p.type==='rec','var(--pencil)');
+    const a=sp[0],b=sp[1],ang=Math.atan2(b[1]-a[1],b[0]-a[0]),h=9;g+=`<polygon points="${b[0]},${b[1]} ${b[0]-h*Math.cos(ang-0.4)},${b[1]-h*Math.sin(ang-0.4)} ${b[0]-h*Math.cos(ang+0.4)},${b[1]-h*Math.sin(ang+0.4)}" fill="var(--pencil)"/>`;
+    g+=ln(a,[a[0],a[1]-34],1,'var(--ink-soft)',1)}
+  else{g+=ln(sp[0],sp[1],0,'var(--pencil)');g+=ln(sp[2],sp[3],0,'#2a63c4');
+    const near=(i,j)=>Math.hypot(sp[i][0]-sp[4][0],sp[i][1]-sp[4][1])<Math.hypot(sp[j][0]-sp[4][0],sp[j][1]-sp[4][1])?i:j;
+    g+=ln(sp[near(0,1)],sp[4],1,'var(--pencil)');g+=ln(sp[near(2,3)],sp[4],1,'#2a63c4')}
+  const cen=[sp.reduce((s,q)=>s+q[0],0)/sp.length,sp.reduce((s,q)=>s+q[1],0)/sp.length];
+  const LP=sp.map((q,i)=>{let dx=q[0]-cen[0],dy=q[1]-cen[1];
+    let nj=-1,nd=1e9;sp.forEach((r,j)=>{if(j!==i){const dd=Math.hypot(r[0]-q[0],r[1]-q[1]);if(dd<nd){nd=dd;nj=j}}});
+    if(nd<34){const ax=q[0]-sp[nj][0],ay=q[1]-sp[nj][1];dx=ax*2+dx*0.3;dy=ay*2+dy*0.3}
+    let d=Math.hypot(dx,dy);if(d<1){dx=1;dy=-1;d=1.4}return [q[0]+dx/d*16,q[1]+dy/d*16+5]});
+  for(let it=0;it<20;it++)for(let i=0;i<LP.length;i++)for(let j=i+1;j<LP.length;j++){const dx=LP[j][0]-LP[i][0],dy=LP[j][1]-LP[i][1],d=Math.hypot(dx,dy);if(d<20){const k=(20-d)/2/(d||1);LP[i][0]-=dx*k;LP[i][1]-=dy*k;LP[j][0]+=dx*k;LP[j][1]+=dy*k}}
+  sp.forEach((q,i)=>{const tx=LP[i][0],ty=LP[i][1];
+    g+=unk[i]?`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="5" fill="var(--sheet)" stroke="var(--ng)" stroke-width="2"/>`:`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="4" fill="var(--ink)"/>`;
+    g+=`<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" font-size="14" font-weight="700" text-anchor="middle" fill="${unk[i]?'var(--ng)':'var(--ink)'}">${lab[i]}${unk[i]?'?':''}</text>`});
+  g+=`<text x="${W-16}" y="20" font-size="12" text-anchor="middle" fill="var(--ink-soft)">N</text>`+ln([W-16,48],[W-16,26],0,'var(--ink-soft)',1.5)+`<polygon points="${W-16},24 ${W-20},32 ${W-12},32" fill="var(--ink-soft)"/>`;
+  return `<svg class="qfig" viewBox="0 0 ${W} ${H}" role="img" aria-label="点の位置の略図">${g}</svg>`;
+}
 function newProblem(){
-  prob=type==='pol'?genPol():type==='rec'?genRec():genArea();
+  prob=type==='pol'?genPol():type==='rec'?genRec():type==='int'?genInt():genArea();
   const q=$('q'),a=$('ans');$('sol').open=false;
   if(type==='pol'){
     q.innerHTML=`<h2>問 点Aから点Bまでの距離と、方向角を求めなさい。</h2>${ptTable([['A',prob.A],['B',prob.B]])}<p class="hint">方向角はX軸(北)から右回り。単位はm。</p>`;
@@ -801,10 +892,16 @@ function newProblem(){
     q.innerHTML=`<h2>問 点Aから方向角・距離で決まる点Bの座標を求めなさい。</h2>${ptTable([['A',prob.A]])}<p>方向角 A→B <b style="font-family:var(--f-mono)">${dmsStr(prob.ang)}</b> 距離 <b style="font-family:var(--f-mono)">${f2(prob.L)} m</b></p>`;
     a.innerHTML=`<label><span class="lab">B の X座標</span><input id="a1" inputmode="decimal"><span class="mark" id="m1"></span></label>
       <label><span class="lab">B の Y座標</span><input id="a2" inputmode="decimal"><span class="mark" id="m2"></span></label>`;
+  }else if(type==='int'){
+    q.innerHTML=`<h2>問 直線ABと直線CDの交点Pの座標を求めなさい。</h2>${ptTable([['A',prob.A],['B',prob.B],['C',prob.C],['D',prob.D]])}<p class="hint">交点は線分の外(延長線上)にあることもあります。</p>`;
+    a.innerHTML=`<label><span class="lab">P の X座標</span><input id="a1" inputmode="decimal"><span class="mark" id="m1"></span></label>
+      <label><span class="lab">P の Y座標</span><input id="a2" inputmode="decimal"><span class="mark" id="m2"></span></label>`;
   }else{
     q.innerHTML=`<h2>問 点A・B・C・Dで囲まれた土地の面積を座標法で求めなさい。</h2>${ptTable(prob.P.map((p,k)=>[names[k],p]))}`;
     a.innerHTML=`<label><span class="lab">面積</span><input id="a1" inputmode="decimal"><span class="unit">㎡</span><span class="mark" id="m1"></span></label>`;
   }
+  $('supAd').hidden=true;
+  {const tw=q.querySelector('.tblwrap');if(tw){const row=document.createElement('div');row.className='qrow';tw.parentNode.insertBefore(row,tw);row.appendChild(tw);row.insertAdjacentHTML('beforeend',qFig(prob))}}
   $('solBody').innerHTML=solution();
 }
 function solution(){
@@ -817,7 +914,7 @@ function solution(){
       <li>r = ${f2(p.dist)} m${rawNeg?'。θ がマイナスで出るので 360 を足す':''}</li>
       <li><code>°′″</code> で度分秒表示 → 方向角 ${dmsStr(p.ang)}</li></ol>
       <h3>複素数で解く方法(Mode → 2:複素数)</h3><ol>
-      <li><code>(</code>${f2(p.B.x)}<code>+</code>${f2(p.B.y)}<code>Eng</code>(i)<code>)</code><code>−</code><code>(</code>${f2(p.A.x)}<code>+</code>${f2(p.A.y)}<code>Eng</code>(i)<code>)</code><code>Apps</code><code>5</code>(▶r∠θ)<code>=</code></li>
+      <li><code>(</code>${f2(p.B.x)}<code>+</code>${f2(p.B.y)}<code>Eng</code>(i)<code>)</code><code>−</code><code>(</code>${f2(p.A.x)}<code>+</code>${f2(p.A.y)}<code>Eng</code>(i)<code>)</code><code>Apps</code><code>▼</code><code>1</code>(▶r∠θ)<code>=</code></li>
       <li>${f2(p.dist)}∠θ と表示される(∠のあとが方向角。マイナスなら360を足す)</li>
       <li>方向角だけ出すなら <code>Apps</code><code>1</code>(Argument)で <code>Arg(</code>(B点)<code>−</code>(A点)<code>)</code><code>=</code>、距離は <code>Abs(</code>(B点)<code>−</code>(A点)<code>)</code><code>=</code></li></ol>`;
   }
@@ -831,9 +928,33 @@ function solution(){
       <li>${f2(p.A.x)}<code>+</code>${f2(p.A.y)}<code>Eng</code>(i)<code>+</code>${f2(p.L)}<code>Shift</code><code>Eng</code>(∠)${d}<code>°′″</code>${m}<code>°′″</code>${s}<code>°′″</code><code>=</code></li>
       <li>a+bi の a が X<sub>B</sub>、b が Y<sub>B</sub>(第3位四捨五入)</li></ol>`;
   }
+  if(p.type==='int'){
+    const C=(a,b)=>({x:a.x*b.x+a.y*b.y,y:a.x*b.y-a.y*b.x}),dv=(a,b)=>{const m=b.x*b.x+b.y*b.y;return {x:(a.x*b.x+a.y*b.y)/m,y:(a.y*b.x-a.x*b.y)/m}},sub=(a,b)=>({x:a.x-b.x,y:a.y-b.y});
+    const x=sub(p.D,p.C),y=sub(p.B,p.A),n=dv(sub(p.C,p.A),x).y,d=dv(y,x).y;
+    return `<h3>交点計算の1行式(短縮版)</h3>
+      <p style="padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-family:var(--f-mono);text-align:center"><b>P = A + y × Imag((C − A) ÷ x) ÷ Imag(y ÷ x)</b></p>
+      <p>x = D − C(直線CDの向き)、y = B − A(Aから進む向き)。C は座標値のまま残し、D − C は x に入れる。x は x キー1回で呼べるので最速。</p><ol>
+      <li>(${f2(p.D.x)}+${f2(p.D.y)}<code>Eng</code>)<code>−</code>(${f2(p.C.x)}+${f2(p.C.y)}<code>Eng</code>)<code>STO</code><code>x</code> → x = ${x.x.toFixed(2)}${x.y<0?'−':'+'}${Math.abs(x.y).toFixed(2)}i</li>
+      <li>(${f2(p.B.x)}+${f2(p.B.y)}<code>Eng</code>)<code>−</code>(${f2(p.A.x)}+${f2(p.A.y)}<code>Eng</code>)<code>STO</code><code>)</code>(y) → y = ${y.x.toFixed(2)}${y.y<0?'−':'+'}${Math.abs(y.y).toFixed(2)}i</li>
+      <li>${f2(p.A.x)}+${f2(p.A.y)}<code>Eng</code><code>STO</code><code>(−)</code>(A)</li>
+      <li><code>Alpha</code><code>(−)</code><code>+</code><code>Alpha</code><code>)</code><code>×</code><code>Apps</code><code>4</code>((${f2(p.C.x)}+${f2(p.C.y)}<code>Eng</code><code>−</code><code>Alpha</code><code>(−)</code>)<code>÷</code><code>x</code><code>)</code><code>÷</code><code>Apps</code><code>4</code><code>Alpha</code><code>)</code><code>÷</code><code>x</code><code>)</code><code>=</code></li>
+      <li>Imag((C−A)÷x) = ${n.toFixed(4)}、Imag(y÷x) = ${d.toFixed(4)}、割ると ${(n/d).toFixed(6)}(AからPまでが AB の何倍か)</li>
+      <li>→ ${p.raw.x.toFixed(4)}+${p.raw.y.toFixed(4)}i、第3位を四捨五入 → <b>P(${f2(p.P.x)}, ${f2(p.P.y)})</b></li></ol>
+      <h3>この式が求めているもの</h3><ul>
+      <li>P = A + t×y。A から y の向きに t 倍だけ進んだ点が P。式の「÷」の部分が t。</li>
+      <li>分子 Imag((C−A)÷x) は「直線CDから A までの垂直距離 ÷ |x|」、分母 Imag(y÷x) は「y の直線CDに対する高さ ÷ |x|」。どちらも |x| で割られているが、割り算で消える。</li>
+      <li>方向角で向きが与えられる問題では、y を 1∠方向角(<code>1</code><code>Shift</code><code>Eng</code>(∠)方向角)にすれば同じ式で解ける。</li></ul>`;
+  }
   const P=p.P,n=names;
   const terms=P.map((q,k)=>`X<sub>${n[k]}</sub>(Y<sub>${n[(k+1)%4]}</sub>−Y<sub>${n[(k+3)%4]}</sub>)`).join(' + ');
-  return `<ol>
+  const mk=['(−)','°′″','Abs','sin'];
+  let sr=0,si=0;for(let k=0;k<4;k++){const a=P[k],b=P[(k+1)%4];sr+=a.x*b.x+a.y*b.y;si+=a.x*b.y-a.y*b.x}
+  return `<h3>複素数で解く方法</h3><ol>
+    <li>各点を X+Yi で入力し、<code>STO</code> のあと ${mk.map((k,i)=>`<code>${k}</code>(${n[i]})`).join('・')} で記憶</li>
+    <li><code>Conjg(</code>A<code>)</code>B <code>+</code> <code>Conjg(</code>B<code>)</code>C <code>+</code> <code>Conjg(</code>C<code>)</code>D <code>+</code> <code>Conjg(</code>D<code>)</code>A <code>=</code> → ${sr.toFixed(4)}${si<0?'−':'+'}${Math.abs(si).toFixed(4)}i(Conjg は <code>Apps</code><code>2</code>)</li>
+    <li><code>÷</code><code>2</code><code>=</code> → <code>Apps</code><code>4</code>(Imag)<code>Ans</code><code>)</code><code>=</code> → ${(si/2).toFixed(5)}</li>
+    <li>小数点以下第2位未満切捨て → <b>${p.area.toFixed(2)} ㎡</b></li></ol>
+    <h3>座標法で解く方法</h3><ol>
     <li>倍面積 = ${terms}</li>
     <li>先に <code>Shift</code><code>9</code>(Clear)でメモリーを0にし、各項を計算して <code>M+</code> で足していく</li>
     <li>倍面積 = ${p.s2.toFixed(4)} ㎡ → 2で割る → ${(p.s2/2).toFixed(5)} ㎡</li>
@@ -845,13 +966,19 @@ function check(){
   const p=prob;let all;
   if(p.type==='pol'){
     const ok1=Math.abs(num('a1')-p.dist)<1e-6;
-    const ok2=[num('a2'),num('a3'),num('a4')].every((v,k)=>v===p.ang[k]);
-    mark('m1',ok1);mark('m2',ok2);all=ok1&&ok2;
+    const inS=num('a2')*3600+num('a3')*60+num('a4'),wantS=p.ang[0]*3600+p.ang[1]*60+p.ang[2];
+    const ok2=[num('a2'),num('a3'),num('a4')].every(v=>isFinite(v))&&Math.round(inS)%1296000===wantS%1296000;
+    mark('m1',ok1);mark('m2',ok2);
+    if(ok2&&!Number.isInteger(num('a4'))){$('m2').textContent='○ 正解(秒未満を四捨五入すると '+dmsStr(p.ang)+')'}all=ok1&&ok2;
   }else if(p.type==='rec'){
     const ok1=Math.abs(num('a1')-p.B.x)<1e-6,ok2=Math.abs(num('a2')-p.B.y)<1e-6;
     mark('m1',ok1);mark('m2',ok2);all=ok1&&ok2;
+  }else if(p.type==='int'){
+    const ok1=Math.abs(num('a1')-p.P.x)<1e-6,ok2=Math.abs(num('a2')-p.P.y)<1e-6;
+    mark('m1',ok1);mark('m2',ok2);all=ok1&&ok2;
   }else{const ok=Math.abs(num('a1')-p.area)<1e-6;mark('m1',ok);all=ok}
   $('sol').open=true;
+  $('supAd').hidden=all||SUP.on;
   if(all){
     const wasRunning=timer.run;stopT();
     if(wasRunning||timer.acc>0){
@@ -905,6 +1032,86 @@ function fitCalc(){
 }
 addEventListener('resize',fitCalc);addEventListener('orientationchange',()=>setTimeout(fitCalc,250));
 fitCalc();if(document.fonts)document.fonts.ready.then(fitCalc);
+
+/* ======================= support mode =======================
+   Shows the key order that reaches the answer for the current problem and
+   highlights the next key on the calculator. Wrong keys are still accepted by the
+   calculator (as on the real unit); the guide just says which key was expected. */
+const SUP={on:false,steps:[],flat:[],pos:0};
+const supNum=v=>f2(v);
+function supSteps(p){
+  if(p.type==='pol'){
+    const neg=p.raw>180;
+    return [
+      {t:'B − A を計算して、メモリー x に入れる',p:'座標は X+Yi で入力します(i は Eng)。B から A を引くと、A から B への向き(ΔX+ΔYi)になります。STO のあと x キーで記憶。',
+       k:`( ${supNum(p.B.x)} + ${supNum(p.B.y)} Eng ) − ( ${supNum(p.A.x)} + ${supNum(p.A.y)} Eng ) STO x`},
+      {t:'距離を出す(Abs)',p:'Abs で |□| が出ます。中に x を入れて、▶ で枠の外へ出てから = 。',k:'Abs x ▶ ='},
+      {t:'方向角を出す(Arg)',p:'Apps → 1(Argument)で Arg( になります。'+(neg?'答えがマイナスになるので、360 を足します。':'')+'最後に °′″ で度分秒の表示にします。',
+       k:'Apps 1 x ) ='+(neg?' + 360 =':'')+' °′″'}];
+  }
+  if(p.type==='rec'){
+    const [d,m,s]=p.ang;
+    return [{t:'A点 + 距離∠方向角 を1行で計算',p:'∠ は Shift → Eng。方向角は度・分・秒を °′″ キーで区切って入れます。答えの a+bi の a が X、b が Y です。',
+      k:`${supNum(p.A.x)} + ${supNum(p.A.y)} Eng + ${supNum(p.L)} Shift Eng ${d} °′″ ${m} °′″ ${s} °′″ =`}];
+  }
+  const mk=['(−)','°′″','Abs','sin'],nm=['A','B','C','D'];
+  if(p.type==='int'){
+    const C=`${supNum(p.C.x)} + ${supNum(p.C.y)} Eng`;
+    return [
+      {t:'x = D − C(直線CDの向き)を x に入れる',p:'座標は X+Yi で入力(i は Eng)。STO のあと x キーで記憶。',k:`( ${supNum(p.D.x)} + ${supNum(p.D.y)} Eng ) − ( ${C} ) STO x`},
+      {t:'y = B − A(Aから進む向き)を y に入れる',p:'STO のあと ) キー(上に y と書いてあるキー)で記憶。',k:`( ${supNum(p.B.x)} + ${supNum(p.B.y)} Eng ) − ( ${supNum(p.A.x)} + ${supNum(p.A.y)} Eng ) STO )`},
+      {t:'A点をメモリー A に入れる',p:'STO のあと (−) キー([A])で記憶。',k:`${supNum(p.A.x)} + ${supNum(p.A.y)} Eng STO (−)`},
+      {t:'P = A + y × Imag((C − A) ÷ x) ÷ Imag(y ÷ x) を1行で計算',p:'Imag( は Apps → 4。y の呼び出しは Alpha → )。C は座標値のまま入れます。答えの a+bi の a が X、b が Y です。',
+       k:`Alpha (−) + Alpha ) × Apps 4 ( ${C} − Alpha (−) ) ÷ x ) ÷ Apps 4 Alpha ) ÷ x ) =`}];
+  }
+  const st4=p.P.map((q,k)=>({t:`${nm[k]}点をメモリー ${nm[k]} に入れる`,p:k===0?`X+Yi で入力して、STO のあと ${mk[k]} キー(上に [${nm[k]}] と書いてあるキー)で記憶します。`:`STO のあと ${mk[k]} キー([${nm[k]}])で記憶。`,
+    k:`${supNum(q.x)} + ${supNum(q.y)} Eng STO ${mk[k]}`}));
+  const term=k=>`Apps 2 Alpha ${mk[k]} ) Alpha ${mk[(k+1)%4]}`;
+  return st4.concat([
+    {t:'Conjg(A)B + Conjg(B)C + Conjg(C)D + Conjg(D)A を計算',p:'Apps → 2(Conjugate)で Conjg( 。メモリーの呼び出しは Alpha のあと各キーです。',k:[0,1,2,3].map(term).join(' + ')+' ='},
+    {t:'2で割る',p:'答えが出たあとに ÷ を押すと、自動で Ans÷ になります。',k:'÷ 2 ='},
+    {t:'虚部(i の数字)だけ取り出す',p:'Apps → 4(Imaginary Part)で Imag( 。これが面積です。小数第3位以下を切り捨てて答えます。',k:'Apps 4 Ans ) ='}]);
+}
+const supIsNum=x=>/^[0-9.]+$/.test(x);
+function supBuild(){
+  SUP.steps=supSteps(prob);SUP.flat=[];SUP.pos=0;
+  SUP.steps.forEach((s,i)=>{s.keys=[];for(const t of s.k.split(' ')){if(supIsNum(t)&&t.length>1){for(const c of t){s.keys.push(c);SUP.flat.push([i,c])}}else{s.keys.push(t);SUP.flat.push([i,t])}}});
+}
+function supBtnFor(label){return [...document.querySelectorAll('.calc button.k')].find(b=>(b.dataset.l||b.textContent)===label)}
+function supDraw(){
+  document.querySelectorAll('.k.guide').forEach(b=>b.classList.remove('guide'));
+  if(!SUP.on)return;
+  const pos=SUP.pos,cur=pos<SUP.flat.length?SUP.flat[pos][0]:SUP.steps.length;let n=0;
+  $('supSteps').innerHTML=SUP.steps.map((s,i)=>{
+    const ks=s.keys.map(k=>{const idx=n++;return `<span class="kc ${/^[0-9.]$/.test(k)?'num':''} ${idx<pos?'ok':''} ${idx===pos?'cur':''}">${k}</span>`}).join('');
+    return `<li class="${i<cur?'done':i===cur?'now':''}"><b>${i<cur?'✓ ':''}${s.t}</b><p>${s.p}</p><div class="keys">${ks}</div></li>`}).join('')
+    +(pos>=SUP.flat.length?'<li class="now" style="list-style:none"><div class="fin">完了! 画面の答えを、きまりどおりに丸めて解答欄に入れ、答え合わせをしてみましょう。</div></li>':'');
+  if(pos<SUP.flat.length){const b=supBtnFor(SUP.flat[pos][1]);if(b)b.classList.add('guide');$('supNext').textContent=SUP.flat[pos][1]}
+  if(cur!==SUP.lastCur){SUP.lastCur=cur;const li=$('supSteps').children[Math.min(cur,SUP.steps.length)];if(li&&pos>0)try{li.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}
+  else $('supNext').textContent='完了';
+}
+function supReset(){SUP.lastCur=-1;clearMem();clearAll();st.menu=null;st.msg=null;SUP.pos=0;$('supMsg').textContent='';render();supDraw()}
+function supSet(on){
+  SUP.on=on;$('sup').hidden=!on;$('supBtn').classList.toggle('supon',on);$('supBtn').setAttribute('aria-pressed',on);
+  if(on){supBuild();supReset()}else{document.querySelectorAll('.k.guide').forEach(b=>b.classList.remove('guide'));$('supMsg').textContent=''}
+}
+{
+  const _press=press;
+  press=function(d){
+    const label=d.m.l;
+    if(!SUP.on||SUP.pos>=SUP.flat.length){_press(d);return}
+    if(label===SUP.flat[SUP.pos][1])_press(d); // wrong keys are not entered, so the calculator stays on track
+    if(label===SUP.flat[SUP.pos][1]){SUP.pos++;$('supMsg').textContent=''}
+    else{$('supMsg').textContent=`手順と違うキーです。光っている「${SUP.flat[SUP.pos][1]}」を押してください。`;
+      const b=supBtnFor(label);if(b){b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),500)}}
+    supDraw();
+  };
+  const _np=newProblem;
+  newProblem=function(){_np();if(SUP.on){supBuild();supReset()}};
+  $('supAdBtn').onclick=()=>{$('supAd').hidden=true;supSet(true);$('sup').scrollIntoView({behavior:'smooth',block:'start'})};
+  $('supBtn').onclick=()=>supSet(!SUP.on);
+  $('supReset').onclick=supReset;
+}
 </script>
 
 <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script>

@@ -7,7 +7,12 @@
 <meta name="description" content="土地家屋調査士試験の記述式対策。複素数モードの関数電卓で座標計算を練習できる無料のWeb電卓です。"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 .toplink{display:inline-block;font-size:13px;color:var(--ink-soft);text-decoration:none;margin-bottom:4px}.toplink:hover{color:var(--pencil)}
 .note-free{font-size:12px;color:var(--ink-soft)}
+/* embed: shown inside another page (記述式の練習) — calculator only, scaled to fit the frame */
+html.embed .toplink,html.embed .page>h1,html.embed .help{display:none!important}
+html.embed .page{display:block!important;padding:6px 6px 0!important;margin:0!important}
+html.embed .calc{position:static!important;transform-origin:top center}
 </style></head><body>
+<script>if(/[?&]embed\b/.test(location.search))document.documentElement.classList.add("embed")</script>
 <title>調査士 関数電卓</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Questrial&display=swap">
@@ -56,6 +61,8 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-siz
   .page>h1,.page>.toplink{grid-column:1/-1;justify-self:center}
   .page>.calc{grid-column:1}
   .page>.help{grid-column:2;max-width:none;padding-top:6px}
+  .page{padding-bottom:40px}
+  html.tallcalc .page>.calc{position:static}
 }
 .lcdwrap{background:var(--bezel);border-radius:7px;padding:5px}
 .lcd{container-type:inline-size;background:var(--lcd);color:var(--lcd-ink);border-radius:3px;padding:4px 7px;height:96px;display:flex;flex-direction:column;gap:1px;
@@ -175,7 +182,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-siz
       <li>角度は <code>35</code><code>°′″</code><code>20</code><code>°′″</code><code>15</code><code>°′″</code> のように入力。計算後の <code>°′″</code> で度分秒表示。</li>
       <li><code>Mode</code> か <code>Apps</code> でモード切替、<code>Shift</code><code>Mode</code> で角度(Deg/Rad)と複素数の表示形式を設定。</li>
     </ul>
-    <p class="note-free">キヤノンの関数電卓 F-570X をモデルに、個人が作成した練習用の電卓です。公式のソフトではないため、実物と異なる動作をする場合があります。学習目的であれば、どなたでも無料で自由にお使いください。内容を改変しての再配布はご遠慮ください。計算結果はご自身でも確かめてください。</p>
+    <p class="note-free">キヤノンの関数電卓 F-570X をモデルに、個人が作成した練習用の電卓です。公式のソフトではないため、実物と異なる動作をする場合があります。学習目的であれば、どなたでも無料で自由にお使いください。内容を改変しての再配布はご遠慮ください。計算結果はご自身でも確かめてください。本試験で使える電卓の条件は、法務省の<a href="https://www.moj.go.jp/content/001465027.pdf" target="_blank" rel="noopener">「土地家屋調査士試験の筆記試験における電卓の使用について」</a>で各自ご確認ください。</p>
   </section>
 </div>
 <script>
@@ -690,6 +697,8 @@ function render(){
 buildKeys();render();
 
 
+{const fitP=()=>{const el=document.querySelector(".calc");if(!el)return;document.documentElement.classList.toggle("tallcalc",el.offsetHeight+24>innerHeight)};addEventListener("resize",fitP);addEventListener("load",fitP);setTimeout(fitP,50);}
+if(document.documentElement.classList.contains("embed")){const fitE=()=>{const el=document.querySelector(".calc");if(!el)return;el.style.transform="";const h=el.offsetHeight+12,w=el.offsetWidth+12,s=Math.min(1,innerHeight/h,innerWidth/w);el.style.transform=s<1?"scale("+s+")":"";};addEventListener("resize",fitE);addEventListener("load",fitE);setTimeout(fitE,50);}
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT')return;
   const map={'+':['+','op','+'],'-':['−','op','-'],'*':['×','op','*'],'/':['÷','op','/'],'(':['(','lp'],')':[')','rp'],',':[',','comma']};

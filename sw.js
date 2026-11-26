@@ -1,6 +1,6 @@
 // Offline support: keep the pages and icons on the device so the calculator opens without a connection.
-const CACHE = 'zahyo-v3';
-const FILES = ['./', 'index.html', 'calculator.html', 'drill.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'zahyo-v6';
+const FILES = ['./', 'index.html', 'calculator.html', 'drill.html', 'kijutsu.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
